@@ -1,0 +1,8 @@
+.tmp
+.temp
+.idea
+.vscode
+.DS_Store
+
+node_mudules
+vendor

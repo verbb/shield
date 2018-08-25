@@ -1,0 +1,40 @@
+{
+    "name": "selvinortiz/shield",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "description": "Harness the power of Akismet to fight spam",
+    "keywords": [
+        "spam",
+        "anti-spam",
+        "akismet",
+        "craft",
+        "plugin",
+        "shield"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Selvin Ortiz",
+            "email": "selvin@selvin.co"
+        }
+    ],
+    "support": {
+        "email": "selvin@selvin.co",
+        "issues": "https://github.com/selvinortiz/craft-plugin-shield/issues?state=open",
+        "source": "https://github.com/selvinortiz/craft-plugin-shield",
+        "docs": "https://github.com/selvinortiz/craft-plugin-shield"
+    },
+    "require": {
+        "craftcms/cms": "^3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "selvinortiz\\shield\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Shield",
+        "handle": "shield",
+        "class": "selvinortiz\\shield\\Shield"
+    }
+}

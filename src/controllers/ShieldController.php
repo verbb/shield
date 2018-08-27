@@ -6,7 +6,7 @@ use craft\web\Controller;
 
 use function selvinortiz\shield\shield;
 
-class SubmissionsController extends Controller
+class ShieldController extends Controller
 {
     protected $allowAnonymous = true;
 

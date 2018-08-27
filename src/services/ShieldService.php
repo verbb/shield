@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use yii\base\UserException;
 
 use Craft;
+use craft\base\Model;
 use craft\base\Component;
 
 use function selvinortiz\shield\shield;
@@ -20,6 +21,7 @@ class ShieldService extends Component
      * @var array
      */
     protected $params;
+
     /**
      * @var Client
      */
@@ -89,7 +91,7 @@ class ShieldService extends Component
     public function isKeyValid()
     {
         $params = array(
-            'key' => $this->getApiKey(),
+            'key'  => $this->getApiKey(),
             'blog' => $this->getOriginUrl(),
         );
 
@@ -225,20 +227,19 @@ class ShieldService extends Component
     }
 
     /**
-     * Contact Form beforeSend()
-     *
      * Allows you to use Shield alongside the Contact Form plugin by P&T
      *
-     * @since 0.4.7
-     * @param BaseModel $form
+     * @since 1.0.0
+     * @param Model $submission
+     *
      * @return boolean
      */
-    public function detectContactFormSpam(BaseModel $form)
+    public function detectContactFormSpam(Model $submission)
     {
         $data = [
-            'email' => $form->getAttribute('fromEmail'),
-            'author' => $form->getAttribute('fromName'),
-            'content' => $form->getAttribute('message'),
+            'email'   => $submission->fromEmail,
+            'author'  => $submission->fromName,
+            'content' => $submission->message,
         ];
 
         return $this->isSpam($data);

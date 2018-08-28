@@ -7,6 +7,14 @@ use Craft;
 use craft\base\Plugin;
 use craft\web\twig\variables\CraftVariable;
 
+use craft\contactform\Mailer;
+use craft\contactform\events\SendEvent;
+use craft\guestentries\controllers\SaveController;
+use craft\guestentries\events\SaveEvent;
+
+use barrelstrength\sproutforms\elements\Entry;
+use barrelstrength\sproutforms\events\OnBeforeSaveEntryEvent;
+
 use selvinortiz\shield\models\Settings;
 use selvinortiz\shield\services\ShieldService;
 use selvinortiz\shield\variables\ShieldVariable;
@@ -20,7 +28,7 @@ use selvinortiz\shield\variables\ShieldVariable;
  */
 class Shield extends Plugin
 {
-    public $hasCpSection  = true;
+    public $hasCpSection = true;
     public $hasCpSettings = false;
 
     /**
@@ -39,9 +47,9 @@ class Shield extends Plugin
         if ($this->shouldEnableContactFormSupport())
         {
             Event::on(
-                \craft\contactform\Mailer::class,
-                \craft\contactform\Mailer::EVENT_BEFORE_SEND,
-                function(\craft\contactform\events\SendEvent $event)
+                Mailer::class,
+                Mailer::EVENT_BEFORE_SEND,
+                function(SendEvent $event)
                 {
                     $event->isSpam = shield()->service->detectContactFormSpam($event->submission);
                 }
@@ -51,9 +59,9 @@ class Shield extends Plugin
         if ($this->shouldEnableGuestEntriesSupport())
         {
             Event::on(
-                craft\guestentries\controllers\SaveController::class,
-                craft\guestentries\controllers\SaveController::EVENT_BEFORE_SAVE_ENTRY,
-                function(craft\guestentries\events\SaveEvent $event)
+                SaveController::class,
+                SaveController::EVENT_BEFORE_SAVE_ENTRY,
+                function(SaveEvent $event)
                 {
                     $event->isSpam = shield()->service->detectDynamicFormSpam($event->entry);
                 }
@@ -62,10 +70,37 @@ class Shield extends Plugin
 
         if ($this->shouldEnableSproutFormsSupport())
         {
-
+            Event::on(
+                Entry::class,
+                Entry::EVENT_BEFORE_SAVE,
+                function(OnBeforeSaveEntryEvent $event)
+                {
+                    if (shield()->service->detectDynamicFormSpam($event->entry))
+                    {
+                        $event->fakeIt = true;
+                        $event->isValid = false;
+                    }
+                }
+            );
         }
 
         $this->set('service', ShieldService::class);
+    }
+
+    /**
+     * @param string|array $message
+     */
+    public function info($message)
+    {
+        Craft::info($message, 'shield');
+    }
+
+    /**
+     * @param string|array $message
+     */
+    public function error($message)
+    {
+        Craft::error($message, 'shield');
     }
 
     public function createSettingsModel()
@@ -135,6 +170,26 @@ class Shield extends Plugin
         }
 
         if (!Craft::$app->plugins->isPluginInstalled('sprout-forms'))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @todo Figure out what is up with the query exception on install
+     *
+     * @return bool
+     */
+    protected function shouldEnableCommentsSupport()
+    {
+        if (!$this->getSettings()->enableCommentsSupport)
+        {
+            return false;
+        }
+
+        if (!Craft::$app->plugins->isPluginInstalled('comments'))
         {
             return false;
         }

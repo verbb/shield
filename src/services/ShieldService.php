@@ -250,7 +250,6 @@ class ShieldService extends Component
     /**
      * Allows you to use Shield alongside Guest Entries plugin by P&T
      * It also allows you to use Shield with other dynamic forms
-     *
      * @param Model $model
      *
      * @return bool
@@ -373,12 +372,11 @@ class ShieldService extends Component
 
     /**
      * @param array $fields
-     * @param Model $object
+     * @param object $object
      *
      * @return array
-     * @throws \Exception
      */
-    protected function renderObjectFields(array $fields, Model $object)
+    protected function renderObjectFields(array $fields, $object)
     {
         try
         {
@@ -389,7 +387,7 @@ class ShieldService extends Component
         }
         catch (\Exception $e)
         {
-            throw $e;
+            return shield()->error($e);
         }
 
         return $fields;

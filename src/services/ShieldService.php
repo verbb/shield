@@ -230,9 +230,11 @@ class ShieldService extends Component
      * Allows you to use Shield alongside the Contact Form plugin by P&T
      *
      * @since 1.0.0
+     *
      * @param Model $submission
      *
      * @return boolean
+     * @throws UserException
      */
     public function detectContactFormSpam(Model $submission)
     {
@@ -246,30 +248,30 @@ class ShieldService extends Component
     }
 
     /**
-     * Implements support for the Guest Entries
+     * Allows you to use Shield alongside Guest Entries plugin by P&T
+     * It also allows you to use Shield with other dynamic forms
      *
-     * @since 0.6.0
+     * @param Model $model
      *
-     * @param BaseModel $model
      * @return bool
+     * @throws UserException
      */
-    public function detectDynamicFormSpam(BaseModel $model)
+    public function detectDynamicFormSpam(Model $model)
     {
         $data = [
-            'email' => Craft::$app->request->getPost('shield.emailField'),
-            'author' => Craft::$app->request->getPost('shield.authorField'),
-            'content' => Craft::$app->request->getPost('shield.contentField'),
+            'email' => Craft::$app->request->post('shield.emailField'),
+            'author' => Craft::$app->request->post('shield.authorField'),
+            'content' => Craft::$app->request->post('shield.contentField'),
         ];
 
         $data = $this->renderObjectFields($data, $model);
 
-        if (false == $data)
+        if ($data)
         {
-            // @todo: Add log for this?
-            return false;
+            return $this->isSpam($data);
         }
 
-        return $this->isSpam($data);
+        return false;
     }
 
     /**
@@ -370,54 +372,24 @@ class ShieldService extends Component
     }
 
     /**
-     * Returns an array of variables to be used by the index or settings templates
-     *
-     * @param bool $includeLogs
-     * @return array
-     */
-    public function getTemplateVariables($includeLogs=false)
-    {
-        $plugin = craft()->plugins->getPlugin('Shield');
-        $settings = $this->pluginSettings->getAttributes();
-        $variables = array();
-
-        $variables['name']  = $plugin->getName(true);
-        $variables['alias']  = $plugin->getName();
-        $variables['version'] = $plugin->getVersion();
-        $variables['developer'] = $plugin->getDeveloper();
-        $variables['developerUrl'] = $plugin->getDeveloperUrl();
-        $variables['settings'] = $settings;
-
-        if ($includeLogs)
-        {
-            $variables['logs'] = $this->getLogs();
-        }
-
-        return $variables;
-    }
-
-    /**
-     * Parses fields with twig support used in mappings
-     *
      * @param array $fields
-     * @param BaseModel $object
+     * @param Model $object
      *
-     * @return array|false
+     * @return array
+     * @throws \Exception
      */
-    protected function renderObjectFields(array $fields, BaseModel $object)
+    protected function renderObjectFields(array $fields, Model $object)
     {
         try
         {
             foreach ($fields as $field => $value)
             {
-                $fields[$field] = craft()->templates->renderObjectTemplate($value, $object);
+                $fields[$field] = Craft::$app->view->renderObjectTemplate($value, $object);
             }
         }
         catch (\Exception $e)
         {
-            SpamGuardPlugin::log($e->getMessage(), LogLevel::Error);
-
-            return false;
+            throw $e;
         }
 
         return $fields;

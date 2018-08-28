@@ -3,17 +3,19 @@ namespace selvinortiz\shield;
 
 use yii\base\Event;
 
-use craft\contactform\Mailer;
-
 use Craft;
 use craft\base\Plugin;
 use craft\web\twig\variables\CraftVariable;
+
 use selvinortiz\shield\models\Settings;
 use selvinortiz\shield\services\ShieldService;
 use selvinortiz\shield\variables\ShieldVariable;
-use selvinortiz\shield\controllers\ShieldController;
 
 /**
+ * Class Shield
+ *
+ * @package selvinortiz\shield
+ *
  * @property ShieldService $service
  */
 class Shield extends Plugin
@@ -21,6 +23,9 @@ class Shield extends Plugin
     public $hasCpSection  = true;
     public $hasCpSettings = false;
 
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
     public function init()
     {
         parent::init();
@@ -31,14 +36,34 @@ class Shield extends Plugin
             [$this, 'registerTemplateComponent']
         );
 
-        Event::on(
-            Mailer::class,
-            Mailer::EVENT_BEFORE_SEND,
-            function(Event $event)
-            {
-                $event->isSpam = shield()->service->detectContactFormSpam($event->submission);
-            }
-        );
+        if ($this->shouldEnableContactFormSupport())
+        {
+            Event::on(
+                \craft\contactform\Mailer::class,
+                \craft\contactform\Mailer::EVENT_BEFORE_SEND,
+                function(\craft\contactform\events\SendEvent $event)
+                {
+                    $event->isSpam = shield()->service->detectContactFormSpam($event->submission);
+                }
+            );
+        }
+
+        if ($this->shouldEnableGuestEntriesSupport())
+        {
+            Event::on(
+                craft\guestentries\controllers\SaveController::class,
+                craft\guestentries\controllers\SaveController::EVENT_BEFORE_SAVE_ENTRY,
+                function(craft\guestentries\events\SaveEvent $event)
+                {
+                    $event->isSpam = shield()->service->detectDynamicFormSpam($event->entry);
+                }
+            );
+        }
+
+        if ($this->shouldEnableSproutFormsSupport())
+        {
+
+        }
 
         $this->set('service', ShieldService::class);
     }
@@ -51,7 +76,7 @@ class Shield extends Plugin
     /**
      * @param Event $event
      *
-     * @return void
+     * @throws \yii\base\InvalidConfigException
      */
     public function registerTemplateComponent(Event $event)
     {
@@ -61,6 +86,60 @@ class Shield extends Plugin
         $variable = $event->sender;
 
         $variable->set('shield', ShieldVariable::class);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function shouldEnableContactFormSupport()
+    {
+        if (!$this->getSettings()->enableContactFormSupport)
+        {
+            return false;
+        }
+
+        if (!Craft::$app->plugins->isPluginInstalled('contact-form'))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function shouldEnableGuestEntriesSupport()
+    {
+        if (!$this->getSettings()->enableGuestEntriesSupport)
+        {
+            return false;
+        }
+
+        if (!Craft::$app->plugins->isPluginInstalled('guest-entries'))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function shouldEnableSproutFormsSupport()
+    {
+        if (!$this->getSettings()->enableSproutFormsSupport)
+        {
+            return false;
+        }
+
+        if (!Craft::$app->plugins->isPluginInstalled('sprout-forms'))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
 

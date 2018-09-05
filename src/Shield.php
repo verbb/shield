@@ -29,7 +29,7 @@ use selvinortiz\shield\variables\ShieldVariable;
  */
 class Shield extends Plugin
 {
-    public $hasCpSection = true;
+    public $hasCpSection  = true;
     public $hasCpSettings = false;
 
     /**
@@ -50,8 +50,7 @@ class Shield extends Plugin
             Event::on(
                 Mailer::class,
                 Mailer::EVENT_BEFORE_SEND,
-                function(SendEvent $event)
-                {
+                function(SendEvent $event) {
                     $event->isSpam = shield()->service->detectContactFormSpam($event->submission);
                 }
             );
@@ -62,8 +61,7 @@ class Shield extends Plugin
             Event::on(
                 SaveController::class,
                 SaveController::EVENT_BEFORE_SAVE_ENTRY,
-                function(SaveEvent $event)
-                {
+                function(SaveEvent $event) {
                     $event->isSpam = shield()->service->detectDynamicFormSpam($event->entry);
                 }
             );
@@ -74,11 +72,10 @@ class Shield extends Plugin
             Event::on(
                 Entry::class,
                 Entry::EVENT_BEFORE_SAVE,
-                function(OnBeforeSaveEntryEvent $event)
-                {
+                function(OnBeforeSaveEntryEvent $event) {
                     if (shield()->service->detectDynamicFormSpam($event->entry))
                     {
-                        $event->fakeIt = true;
+                        $event->fakeIt  = true;
                         $event->isValid = false;
                     }
                 }
@@ -90,8 +87,23 @@ class Shield extends Plugin
             // @todo: Add event listener for Comments
         }
 
-        $this->set('service', ShieldService::class);
-        $this->set('logs', LogsService::class);
+        $this->setComponents([
+            'logs'    => LogsService::class,
+            'service' => ShieldService::class,
+        ]);
+    }
+
+    /**
+     * @return Settings
+     */
+    public function getSettings()
+    {
+        return parent::getSettings();
+    }
+
+    public function createSettingsModel()
+    {
+        return new Settings();
     }
 
     /**
@@ -108,19 +120,6 @@ class Shield extends Plugin
     public function error($message)
     {
         Craft::error($message, 'shield');
-    }
-
-    /**
-     * @return Settings
-     */
-    public function getSettings()
-    {
-        return parent::getSettings();
-    }
-
-    public function createSettingsModel()
-    {
-        return new Settings();
     }
 
     /**

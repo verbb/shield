@@ -5,13 +5,13 @@ use craft\base\Model;
 
 class Settings extends Model
 {
-    public $akismetApiKey = '';
-    public $akismetOriginUrl = '';
-    public $logSubmissions = false;
-    public $enableContactFormSupport = true;
+    public $akismetApiKey             = '';
+    public $akismetOriginUrl          = '';
+    public $logSubmissions            = false;
+    public $enableContactFormSupport  = true;
     public $enableGuestEntriesSupport = true;
-    public $enableSproutFormsSupport = false;
-    public $enableCommentsSupport = false;
+    public $enableSproutFormsSupport  = false;
+    public $enableCommentsSupport     = false;
 
     public function rules()
     {

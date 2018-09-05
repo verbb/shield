@@ -16,6 +16,7 @@ use barrelstrength\sproutforms\elements\Entry;
 use barrelstrength\sproutforms\events\OnBeforeSaveEntryEvent;
 
 use selvinortiz\shield\models\Settings;
+use selvinortiz\shield\services\LogsService;
 use selvinortiz\shield\services\ShieldService;
 use selvinortiz\shield\variables\ShieldVariable;
 
@@ -84,7 +85,13 @@ class Shield extends Plugin
             );
         }
 
+        if ($this->shouldEnableCommentsSupport())
+        {
+            // @todo: Add event listener for Comments
+        }
+
         $this->set('service', ShieldService::class);
+        $this->set('logs', LogsService::class);
     }
 
     /**
@@ -101,6 +108,14 @@ class Shield extends Plugin
     public function error($message)
     {
         Craft::error($message, 'shield');
+    }
+
+    /**
+     * @return Settings
+     */
+    public function getSettings()
+    {
+        return parent::getSettings();
     }
 
     public function createSettingsModel()

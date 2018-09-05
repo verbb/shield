@@ -3,6 +3,7 @@ namespace selvinortiz\shield\services;
 
 use GuzzleHttp\Client;
 
+use selvinortiz\enums\CommentType;
 use yii\base\UserException;
 
 use Craft;
@@ -23,27 +24,23 @@ class ShieldService extends Component
     protected $params;
 
     /**
-     * @var Client
-     */
-
-    /**
      *
      * @var Client
      */
     protected $httpClient;
 
     /**
-     * Initializes this component, Guzzle client, and plugin settings
+     * @throws \yii\base\InvalidConfigException
      */
     public function init()
     {
         parent::init();
 
         $this->params = [
-            'blog'  => $this->getOriginUrl(),
-            'user_ip' => $this->getRequestingIp(),
-            'user_agent' => $this->getUserAgent(),
-            'comment_type' => 'Entry'
+            'blog'         => $this->getOriginUrl(),
+            'user_ip'      => $this->getRequestingIp(),
+            'user_agent'   => $this->getUserAgent(),
+            'comment_type' => CommentType::ContactForm,
         ];
 
         $this->httpClient = Craft::createGuzzleClient();
@@ -66,9 +63,9 @@ class ShieldService extends Component
     }
 
     /**
-     * Ensures that a valid origin URL is set and returns it
-     *
      * @return string
+     *
+     * @throws \yii\base\InvalidConfigException
      */
     public function getOriginUrl()
     {
@@ -84,42 +81,44 @@ class ShieldService extends Component
     }
 
     /**
-     * Checks whether the API key is valid
-     *
      * @return bool
+     *
+     * @throws \yii\base\InvalidConfigException
      */
     public function isKeyValid()
     {
-        $params = array(
+        $params = [
             'key'  => $this->getApiKey(),
             'blog' => $this->getOriginUrl(),
-        );
+        ];
 
         $response = $this->httpClient->post($this->getKeyEndpoint(), ['form_params' => $params]);
-        $response = (string) $response->getBody();
+        $response = (string)$response->getBody();
 
         return $response == 'valid';
     }
 
     /**
-     * Validates potential spam against the Akismet API
-     *
      * @param array $data
      *
      * @return bool
+     *
+     * @throws UserException
+     * @throws \yii\base\InvalidConfigException
      */
-    public function detectSpam(array $data=array())
+    public function detectSpam(array $data = [])
     {
         $params = array_merge($this->params, [
-            'comment_author' => $data['author'] ?? null,
-            'comment_content' => $data['content'] ?? null,
+            'comment_type'         => $data['type'] ?? $this->params['comment_type'] ?? null,
+            'comment_author'       => $data['author'] ?? null,
+            'comment_content'      => $data['content'] ?? null,
             'comment_author_email' => $data['email'] ?? null,
         ]);
 
         if ($this->isKeyValid())
         {
             $response = $this->httpClient->post($this->getContentEndpoint(), ['form_params' => $params]);
-            $response = (string) $response->getBody();
+            $response = (string)$response->getBody();
 
             return 'true' == $response;
         }
@@ -131,21 +130,24 @@ class ShieldService extends Component
      * @param array $data
      *
      * @return bool
+     *
+     * @throws UserException
+     * @throws \yii\base\InvalidConfigException
      */
-    public function submitSpam(array $data=array())
+    public function submitSpam(array $data = [])
     {
         $params = array_merge($this->params, [
-            'comment_author' => isset($data['author']) ? $data['author'] : null,
-            'comment_content' => isset($data['content']) ? $data['content'] : null,
-            'comment_author_email' => isset($data['email']) ? $data['email'] : null,
+            'comment_author'       => $data['author'] ?? null,
+            'comment_content'      => $data['content'] ?? null,
+            'comment_author_email' => $data['email'] ?? null,
         ]);
 
         if ($this->isKeyValid())
         {
-            $request = $this->httpClient->post($this->getSpamEndpoint(), ['form_params' => $params]);
-            $response = (string) $request->send()->getBody();
+            $response = $this->httpClient->post($this->getSpamEndpoint(), ['form_params' => $params]);
+            $response = (string)$response->getBody();
 
-            return (bool) ('Thanks for making the web a better place.' == $response);
+            return (bool)('Thanks for making the web a better place.' == $response);
         }
 
         throw new UserException('Your akismet api key is invalid.');
@@ -155,73 +157,55 @@ class ShieldService extends Component
      * @param array $data
      *
      * @return bool
+     *
+     * @throws UserException
+     * @throws \yii\base\InvalidConfigException
      */
-    public function submitHam(array $data=array())
+    public function submitHam(array $data = [])
     {
         $params = array_merge($this->params, [
-            'comment_author' => isset($data['author']) ? $data['author'] : null,
-            'comment_content' => isset($data['content']) ? $data['content'] : null,
-            'comment_author_email' => isset($data['email']) ? $data['email'] : null,
+            'comment_author'       => $data['author'] ?? null,
+            'comment_content'      => $data['content'] ?? null,
+            'comment_author_email' => $data['email'] ?? null,
         ]);
 
         if ($this->isKeyValid())
         {
-            $request = $this->httpClient->post($this->getHamEndpoint(),['form_params' => $params]);
-            $response = (string) $request->send()->getBody();
+            $response = $this->httpClient->post($this->getHamEndpoint(), ['form_params' => $params]);
+            $response = (string)$response->getBody();
 
-            return (bool) ('Thanks for making the web a better place.' == $response);
+            return (bool)('Thanks for making the web a better place.' == $response);
         }
 
         throw new UserException('Your akismet api key is invalid.');
     }
 
     /**
-     * Checks whether the content is considered spam as far as akismet is concerned
-     *
-     * @param array $data The array containing the key/value pairs to validate
-     *
-     * @example
-     * $data = array(
-     *  'email' => 'john@smith.com',
-     *  'author' => 'John Smith',
-     *  'content' => 'We are Smith & Co, one of the best companies in the world.'
-     * )
-     *
-     * @note $data[content] is required
+     * @param array $data
      *
      * @return bool
+     *
+     * @throws \yii\base\InvalidConfigException
      */
     public function isSpam(array $data = [])
     {
-        $isKeyValid = true;
+        $isKeyValid    = true;
         $flaggedAsSpam = false;
 
         try
         {
             $flaggedAsSpam = $this->detectSpam($data);
         }
-        catch(UserException $e)
+        catch (UserException $e)
         {
-            throw $e;
-            // if (craft()->userSession->isAdmin())
-            // {
-            //     craft()->userSession->setError($e->getMessage());
-            //     craft()->request->redirect(sprintf('/%s/settings/plugins/shield/', craft()->config->get('cpTrigger')));
-            // }
-            // else
-            // {
-            //     $isKeyValid = false;
+            $message = array_merge($data, [
+                'error'         => $e,
+                'isKeyValid'    => $isKeyValid,
+                'flaggedAsSpam' => $flaggedAsSpam
+            ]);
 
-            //     Craft::log($e->getMessage(), LogLevel::Warning);
-            // }
+            shield()->error($message);
         }
-
-        $params = array_merge($data, [
-            'isKeyValid' => $isKeyValid,
-            'flaggedAsSpam' => $flaggedAsSpam
-        ]);
-
-        // $this->addLog($params);
 
         return $flaggedAsSpam;
     }
@@ -229,16 +213,16 @@ class ShieldService extends Component
     /**
      * Allows you to use Shield alongside the Contact Form plugin by P&T
      *
-     * @since 1.0.0
-     *
      * @param Model $submission
      *
      * @return boolean
-     * @throws UserException
+     *
+     * @throws \yii\base\InvalidConfigException
      */
     public function detectContactFormSpam(Model $submission)
     {
         $data = [
+            'type'    => CommentType::ContactForm,
             'email'   => $submission->fromEmail,
             'author'  => $submission->fromName,
             'content' => $submission->message,
@@ -250,16 +234,19 @@ class ShieldService extends Component
     /**
      * Allows you to use Shield alongside Guest Entries plugin by P&T
      * It also allows you to use Shield with other dynamic forms
+     *
      * @param Model $model
      *
      * @return bool
-     * @throws UserException
+     *
+     * @throws \yii\base\InvalidConfigException
      */
     public function detectDynamicFormSpam(Model $model)
     {
         $data = [
-            'email' => Craft::$app->request->post('shield.emailField'),
-            'author' => Craft::$app->request->post('shield.authorField'),
+            'type'    => Craft::$app->request->post('shield.typeField', CommentType::ContactForm),
+            'email'   => Craft::$app->request->post('shield.emailField'),
+            'author'  => Craft::$app->request->post('shield.authorField'),
             'content' => Craft::$app->request->post('shield.contentField'),
         ];
 
@@ -274,123 +261,22 @@ class ShieldService extends Component
     }
 
     /**
-     * Comments onBeforeSaveComment()
+     * @param Model $comment
      *
-     * Allows you to use Shield alongside the Comments plugin
+     * @return bool
      *
-     * @since 0.6.0
-     * @param array $form
-     * @return boolean
+     * @throws \yii\base\InvalidConfigException
      */
-    public function detectCommentsSpam(BaseModel $comment)
+    public function detectCommentsSpam(Model $comment)
     {
-        $data = array(
-            'email' => $comment->author->email,
-            'author' => $comment->author->fullName,
+        $data = [
+            'type'    => CommentType::Comment,
+            'email'   => $comment->author->email,
+            'author'  => $comment->author->fullName,
             'content' => $comment->comment,
-        );
+        ];
 
         return $this->isSpam($data);
-    }
-
-    /**
-     * Deletes a log by id
-     *
-     * @param $id
-     *
-     * @return bool
-     * @throws \CDbException
-     */
-    public function deleteLog($id)
-    {
-        $log = SpamGuardRecord::model()->findById($id);
-
-        if ($log)
-        {
-            $log->delete();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function deleteLogs()
-    {
-        return SpamGuardRecord::model()->deleteAll();
-    }
-
-    /**
-     * Returns an array of logs if any are found
-     *
-     * @param array $attributes
-     *
-     * @return array
-     */
-    public function getLogs(array $attributes=array())
-    {
-        $models = array();
-        $records = SpamGuardRecord::model()->findAllByAttributes($attributes);
-
-        if ($records)
-        {
-            foreach ($records as $record)
-            {
-                $models[] = SpamGuardModel::populateModel($record->getAttributes());
-            }
-        }
-
-        return $models;
-    }
-
-    /**
-     * Creates a new submission log if logging is enabled
-     *
-     * @param $data
-     *
-     * @return bool
-     */
-    public function addLog($data)
-    {
-        if ($this->pluginSettings->getAttribute('logSubmissions'))
-        {
-            $record = new SpamGuardRecord;
-
-            $record->setAttributes($data, false);
-
-            if ($record->validate())
-            {
-                $record->save();
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param array $fields
-     * @param object $object
-     *
-     * @return array
-     */
-    protected function renderObjectFields(array $fields, $object)
-    {
-        try
-        {
-            foreach ($fields as $field => $value)
-            {
-                $fields[$field] = Craft::$app->view->renderObjectTemplate($value, $object);
-            }
-        }
-        catch (\Exception $e)
-        {
-            return shield()->error($e);
-        }
-
-        return $fields;
     }
 
     /**
@@ -426,5 +312,28 @@ class ShieldService extends Component
     protected function getHamEndpoint()
     {
         return sprintf('http://%s.%s/submit-ham', $this->getApiKey(), self::ENDPOINT);
+    }
+
+    /**
+     * @param array  $fields
+     * @param object $object
+     *
+     * @return array
+     */
+    protected function renderObjectFields(array $fields, $object)
+    {
+        try
+        {
+            foreach ($fields as $field => $value)
+            {
+                $fields[$field] = Craft::$app->view->renderObjectTemplate($value, $object);
+            }
+        }
+        catch (\Exception $e)
+        {
+            return shield()->error($e);
+        }
+
+        return $fields;
     }
 }

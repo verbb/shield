@@ -86,7 +86,8 @@ class Shield extends Plugin
             Event::on(
                 Entry::class,
                 Entry::EVENT_BEFORE_SAVE,
-                function(OnBeforeSaveEntryEvent $event) {
+                //function(OnBeforeSaveEntryEvent $event) {
+                function(Event $event) {
                     if (shield()->service->detectDynamicFormSpam($event->entry))
                     {
                         $event->fakeIt  = true;

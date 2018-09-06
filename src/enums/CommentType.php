@@ -1,5 +1,5 @@
 <?php
-namespace selvinortiz\enums;
+namespace selvinortiz\shield\enums;
 
 /**
  * Class CommentType

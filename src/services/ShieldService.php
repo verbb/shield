@@ -3,12 +3,13 @@ namespace selvinortiz\shield\services;
 
 use GuzzleHttp\Client;
 
-use selvinortiz\enums\CommentType;
 use yii\base\UserException;
 
 use Craft;
 use craft\base\Model;
 use craft\base\Component;
+
+use selvinortiz\shield\enums\CommentType;
 
 use function selvinortiz\shield\shield;
 
@@ -103,6 +104,38 @@ class ShieldService extends Component
      *
      * @return bool
      *
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function isSpam(array $data = [])
+    {
+        $isKeyValid    = true;
+        $flaggedAsSpam = false;
+
+        try
+        {
+            $flaggedAsSpam = $this->detectSpam($data);
+        }
+        catch (UserException $e)
+        {
+            $message = array_merge($data, [
+                'error'         => $e,
+                'isKeyValid'    => $isKeyValid,
+                'flaggedAsSpam' => $flaggedAsSpam
+            ]);
+
+            shield()->error($message);
+        }
+
+        shield()->logs->create($data, $flaggedAsSpam);
+
+        return $flaggedAsSpam;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return bool
+     *
      * @throws UserException
      * @throws \yii\base\InvalidConfigException
      */
@@ -181,38 +214,6 @@ class ShieldService extends Component
     }
 
     /**
-     * @param array $data
-     *
-     * @return bool
-     *
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function isSpam(array $data = [])
-    {
-        $isKeyValid    = true;
-        $flaggedAsSpam = false;
-
-        try
-        {
-            $flaggedAsSpam = $this->detectSpam($data);
-        }
-        catch (UserException $e)
-        {
-            $message = array_merge($data, [
-                'error'         => $e,
-                'isKeyValid'    => $isKeyValid,
-                'flaggedAsSpam' => $flaggedAsSpam
-            ]);
-
-            shield()->error($message);
-        }
-
-        shield()->logs->create($data, $flaggedAsSpam);
-
-        return $flaggedAsSpam;
-    }
-
-    /**
      * Allows you to use Shield alongside the Contact Form plugin by P&T
      *
      * @param Model $submission
@@ -246,10 +247,10 @@ class ShieldService extends Component
     public function detectDynamicFormSpam(Model $model)
     {
         $data = [
-            'type'    => Craft::$app->request->post('shield.typeField', CommentType::ContactForm),
-            'email'   => Craft::$app->request->post('shield.emailField'),
-            'author'  => Craft::$app->request->post('shield.authorField'),
-            'content' => Craft::$app->request->post('shield.contentField'),
+            'type'    => Craft::$app->request->post('shield.typeFieldHandle', CommentType::ContactForm),
+            'email'   => Craft::$app->request->post('shield.emailFieldHandle'),
+            'author'  => Craft::$app->request->post('shield.authorFieldHandle'),
+            'content' => Craft::$app->request->post('shield.contentFieldHandle'),
         ];
 
         $data = $this->renderObjectFields($data, $model);

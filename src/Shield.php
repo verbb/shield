@@ -29,12 +29,25 @@ use selvinortiz\shield\variables\ShieldVariable;
  */
 class Shield extends Plugin
 {
-    public $hasCpSection  = true;
-    public $hasCpSettings = false;
+    /**
+     * @var string
+     */
+    public $schemaVersion = '1.0.0';
 
     /**
-     * @throws \yii\base\InvalidConfigException
+     * @todo Make configurable
+     *
+     * @var bool
      */
+    public $hasCpSection  = true;
+
+    /**
+     * @todo Make configurable
+     *
+     * @var bool
+     */
+    public $hasCpSettings = false;
+
     public function init()
     {
         parent::init();
@@ -82,10 +95,7 @@ class Shield extends Plugin
             );
         }
 
-        if ($this->shouldEnableCommentsSupport())
-        {
-            // @todo: Add event listener for Comments
-        }
+        // @todo Add support for Comments by Verbb (Josh Crawford)
 
         $this->setComponents([
             'logs'    => LogsService::class,

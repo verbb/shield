@@ -25,6 +25,7 @@ use selvinortiz\shield\variables\ShieldVariable;
  *
  * @package selvinortiz\shield
  *
+ * @property LogsService   $logs
  * @property ShieldService $service
  */
 class Shield extends Plugin
@@ -39,7 +40,7 @@ class Shield extends Plugin
      *
      * @var bool
      */
-    public $hasCpSection  = true;
+    public $hasCpSection = true;
 
     /**
      * @todo Make configurable

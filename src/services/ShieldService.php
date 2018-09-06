@@ -207,6 +207,8 @@ class ShieldService extends Component
             shield()->error($message);
         }
 
+        shield()->logs->create($data, $flaggedAsSpam);
+
         return $flaggedAsSpam;
     }
 

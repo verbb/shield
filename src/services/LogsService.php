@@ -3,6 +3,8 @@ namespace selvinortiz\shield\services;
 
 use craft\base\Component;
 
+use selvinortiz\shield\records\LogRecord;
+
 use function selvinortiz\shield\shield;
 
 /**
@@ -19,21 +21,54 @@ class LogsService extends Component
         $this->logSubmissions = shield()->getSettings()->logSubmissions;
     }
 
-    public function create(array $data)
+    public function create(array $data, $flagged = false)
     {
+        if ($this->logSubmissions)
+        {
+            $log          = new LogRecord();
+            $log->type    = $data['type'] ?? null;
+            $log->email   = $data['email'] ?? null;
+            $log->author  = $data['author'] ?? null;
+            $log->content = $data['content'] ?? null;
+            $log->flagged = (bool)$flagged;
+
+            if (!$log->save())
+            {
+                $message = [
+                    'errors'     => $log->getErrors(),
+                    'properties' => $log->getAttributes(),
+                    'message'    => \Craft::t('shield', 'Unable to save submission log')
+                ];
+
+                shield()->error($message);
+            }
+        }
     }
 
+    /**
+     * @param int|null $id
+     *
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function delete(int $id = null)
     {
-    }
+        if ($id && ($log = LogRecord::find()->where(['id' => $id])->one()))
+        {
+            if (!$log->delete())
+            {
+                $message = [
+                    'errors'     => $log->getErrors(),
+                    'properties' => $log->getAttributes(),
+                    'message'    => \Craft::t('shield', 'Unable to delete submission log')
+                ];
 
-    public function one()
-    {
-        return [];
-    }
-
-    public function all()
-    {
-        return [];
+                shield()->error($message);
+            }
+        }
+        else
+        {
+            LogRecord::deleteAll();
+        }
     }
 }

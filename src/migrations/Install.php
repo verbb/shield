@@ -17,6 +17,7 @@ class Install extends Migration
     {
         $this->createTable('{{%shield_logs}}', [
             'id'          => $this->primaryKey(),
+            'type'        => $this->string(25),
             'email'       => $this->string(),
             'author'      => $this->string(100),
             'content'     => $this->text(),

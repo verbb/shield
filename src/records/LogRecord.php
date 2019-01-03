@@ -2,7 +2,8 @@
 namespace selvinortiz\shield\records;
 
 use craft\db\ActiveRecord;
-use selvinortiz\enums\CommentType;
+
+use selvinortiz\shield\enums\CommentType;
 
 class LogRecord extends ActiveRecord
 {

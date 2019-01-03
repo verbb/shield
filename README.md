@@ -1,5 +1,7 @@
 # Shield for Craft 3
-Harness the power of [Akisment](https://akismet.com) to fight spam in [Craft CMS](https://craftcms.com)
+Harness the power of [Akisment](https://akismet.com) to shield your [Craft CMS](https://craftcms.com) site from Spam
 
 ## Todo
+- Add support for user registrations
 - Add support for Comments by Verbb
+- Add support for Sprout Forms by Barrel Strength

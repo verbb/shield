@@ -47,7 +47,7 @@ class Shield extends Plugin
      *
      * @var bool
      */
-    public $hasCpSettings = false;
+    public $hasCpSettings = true;
 
     public function init()
     {

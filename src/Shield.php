@@ -30,6 +30,8 @@ use selvinortiz\shield\variables\ShieldVariable;
  */
 class Shield extends Plugin
 {
+    public $controllerNamespace = 'selvinortiz\shield\controllers';
+
     /**
      * @var string
      */
@@ -42,16 +44,15 @@ class Shield extends Plugin
      */
     public $hasCpSection = true;
 
-    /**
-     * @todo Make configurable
-     *
-     * @var bool
-     */
-    public $hasCpSettings = true;
 
     public function init()
     {
         parent::init();
+
+        $this->setComponents([
+            'logs'    => LogsService::class,
+            'service' => ShieldService::class,
+        ]);
 
         Event::on(
             CraftVariable::class,
@@ -99,18 +100,6 @@ class Shield extends Plugin
 
         // @todo Add support for Comments by Verbb (Josh Crawford)
 
-        $this->setComponents([
-            'logs'    => LogsService::class,
-            'service' => ShieldService::class,
-        ]);
-    }
-
-    /**
-     * @return Settings
-     */
-    public function getSettings()
-    {
-        return parent::getSettings();
     }
 
     public function createSettingsModel()

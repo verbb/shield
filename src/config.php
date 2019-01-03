@@ -2,7 +2,7 @@
 
 return [
     '*' => [
-        'akismetApiKey' => '1810132c1ddc',
+        'akismetApiKey' => getenv('AKISMET_API_KEY'),
         'akismetOriginUrl' => 'https://plugindev.test',
         'logSubmissions' => false,
         'enableContactFormSupport' => true,

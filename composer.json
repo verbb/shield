@@ -2,7 +2,7 @@
     "name": "selvinortiz/shield",
     "type": "craft-plugin",
     "version": "1.0.0",
-    "description": "Harness the power of Akismet to fight spam",
+    "description": "Harness the power of Akismet to Shield your Craft CMS site from Spam",
     "keywords": [
         "spam",
         "anti-spam",
@@ -35,6 +35,10 @@
     "extra": {
         "name": "Shield",
         "handle": "shield",
-        "class": "selvinortiz\\shield\\Shield"
+        "class": "selvinortiz\\shield\\Shield",
+        "developer": "Selvin Ortiz",
+        "developerUrl": "https://selvinortiz.com",
+        "documentationUrl": "https://selvinortiz.com/plugins/shield",
+        "changelogUrl": "https://raw.githubusercontent.com/selvinortiz/craft-plugin-doxter/master/CHANGELOG.md"
     }
 }

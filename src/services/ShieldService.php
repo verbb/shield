@@ -126,6 +126,7 @@ class ShieldService extends Component
             shield()->error($message);
         }
 
+        shield()->error($data);
         shield()->logs->create($data, $flaggedAsSpam);
 
         return $flaggedAsSpam;

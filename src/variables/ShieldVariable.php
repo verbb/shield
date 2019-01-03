@@ -19,4 +19,9 @@ class ShieldVariable
     {
         return shield()->service->isKeyValid();
     }
+
+    public function logs()
+    {
+        return shield()->logs->all();
+    }
 }

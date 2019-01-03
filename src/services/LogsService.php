@@ -21,6 +21,11 @@ class LogsService extends Component
         $this->logSubmissions = shield()->getSettings()->logSubmissions;
     }
 
+    public function all()
+    {
+        return LogRecord::find()->all();
+    }
+
     public function create(array $data, $flagged = false)
     {
         if ($this->logSubmissions)
@@ -31,6 +36,11 @@ class LogsService extends Component
             $log->author  = $data['author'] ?? null;
             $log->content = $data['content'] ?? null;
             $log->flagged = (bool)$flagged;
+
+            if (!$log->validate())
+            {
+                shield()->error($log->errors);
+            }
 
             if (!$log->save())
             {

@@ -1,7 +1,7 @@
 {
     "name": "selvinortiz/shield",
     "type": "craft-plugin",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Harness the power of Akismet to Shield your Craft CMS site from Spam",
     "keywords": [
         "spam",

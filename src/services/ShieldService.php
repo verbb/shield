@@ -295,7 +295,7 @@ class ShieldService extends Component
 
     protected function getUserAgent()
     {
-        return Craft::$app->request->getUserAgent() ?? 'Craft 3 | Shield 1';
+        return Craft::$app->request->getUserAgent() ?? 'Craft 3.0 | Shield 1.0';
     }
 
     protected function getKeyEndpoint()

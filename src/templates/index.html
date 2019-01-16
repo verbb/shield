@@ -1,12 +1,12 @@
 {% extends "_layouts/cp" %}
 
-{% set title = "Shield Logged Submission" %}
+{% set title = "Shield Logs" %}
 {% set extraPageHeaderHtml %}
-    <a class="btn settings icon" href="{{ url('settings/plugins/spamguard') }}" title="{{ 'Settings'|t }}"></a>
+    <a class="btn settings icon" href="{{ url('settings/plugins/shield') }}" title="{{ 'Settings'|t }}"></a>
 {% endset %}
 
 {% set name = "Shield" %}
-{% set version = "1.0.0" %}
+{% set version = "1.0" %}
 {% set developer = "Selvin Ortiz" %}
 {% set developerUrl = "https://selvinortiz.com" %}
 
@@ -14,7 +14,7 @@
 
 {% set content %}
     {% if logs is defined and logs|length %}
-        <table class="data grid fullwidth spamguardGrid">
+        <table class="data grid fullwidth shieldGrid">
             <tr>
                 <th>Time</th>
                 <th>Email</th>
@@ -22,7 +22,7 @@
                 <th colspan="2" style="width: 50%;">Content</th>
             </tr>
             {% for log in logs %}
-                <tr{{log.flagged?'class="spamguardSpam"':''}}>
+                <tr class="{{ log.flagged ? 'flagged' : 'clean' }}">
                     <td>
                         {{ log.dateCreated|date('Y/m/d') ~' '~ log.dateCreated|date('H:ia') }}</td>
                     <td>
@@ -32,9 +32,9 @@
                     <td class="typewriter">
                         {{ log.content|nl2br }}</td>
                     <td>
-                        <form action="" method="POST">
-                            {{ getCsrfInput() }}
-                            <input name="action" type="hidden" value="spamGuard/deleteLog"/>
+                        <form method="POST">
+                            {{ csrfInput() }}
+                            <input name="action" type="hidden" value="shield/deleteLog"/>
                             <input type="hidden" name="id" value="{{ log.id }}"/>
                             <button class="btn icon delete" style="margin-top: -4px;" type="submit">Delete</button>
                         </form>
@@ -42,11 +42,11 @@
                 </tr>
             {% endfor %}
         </table>
-        <div class="spamguardActionSet">
+        <div class="shieldActionSet">
             <div>
-                <form action="" method="POST">
-                    {{ getCsrfInput() }}
-                    <input name="action" type="hidden" value="spamGuard/deleteLogs"/>
+                <form method="POST">
+                    {{ csrfInput() }}
+                    <input name="action" type="hidden" value="shield/deleteLogs"/>
                     <input name="confirmation" type="hidden" value=""/>
                     <button type="submit" class="btn submit icon">Delete Everything</button>
                     <p>
@@ -60,13 +60,13 @@
         <p>Nothing yet, you have a clean slate for now: )</p>
     {% endif %}
 
-    <div class="spamguardSection credits">
+    <div class="shieldSection credits">
         <p>
             &copy;
             {{ "now" | date("Y") }}
             <strong>
                 {{ name }}
-                <span class="spamguardSubtle">({{ version }})</span>
+                <span class="shieldSubtle">({{ version }})</span>
             </strong>
             ❤️ Lovingly crafted by
             <a href="{{- developerUrl -}}" title="@selvinortiz" target="_blank">

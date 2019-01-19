@@ -44,7 +44,6 @@ class Shield extends Plugin
      */
     public $hasCpSection = true;
 
-
     public function init()
     {
         parent::init();
@@ -81,25 +80,6 @@ class Shield extends Plugin
                 }
             );
         }
-
-        if ($this->shouldEnableSproutFormsSupport())
-        {
-            Event::on(
-                Entry::class,
-                Entry::EVENT_BEFORE_SAVE,
-                //function(OnBeforeSaveEntryEvent $event) {
-                function(Event $event) {
-                    if (shield()->service->detectDynamicFormSpam($event->entry))
-                    {
-                        $event->fakeIt  = true;
-                        $event->isValid = false;
-                    }
-                }
-            );
-        }
-
-        // @todo Add support for Comments by Verbb (Josh Crawford)
-
     }
 
     public function createSettingsModel()
@@ -167,44 +147,6 @@ class Shield extends Plugin
         }
 
         if (!Craft::$app->plugins->isPluginInstalled('guest-entries'))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    protected function shouldEnableSproutFormsSupport()
-    {
-        if (!$this->getSettings()->enableSproutFormsSupport)
-        {
-            return false;
-        }
-
-        if (!Craft::$app->plugins->isPluginInstalled('sprout-forms'))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @todo Figure out what is up with the query exception on install
-     *
-     * @return bool
-     */
-    protected function shouldEnableCommentsSupport()
-    {
-        if (!$this->getSettings()->enableCommentsSupport)
-        {
-            return false;
-        }
-
-        if (!Craft::$app->plugins->isPluginInstalled('comments'))
         {
             return false;
         }

@@ -13,28 +13,34 @@
 {% set logs = craft.shield.logs %}
 
 {% set content %}
-    {% if logs is defined and logs|length %}
-        <table class="data grid fullwidth shieldGrid">
+    {% if logs|length > 0 %}
+        <table class="data grid fullwidth">
             <tr>
-                <th>Time</th>
+                <th>#</th>
+                <th>Date/Time</th>
+                <th>Name</th>
                 <th>Email</th>
-                <th>Author</th>
                 <th colspan="2" style="width: 50%;">Content</th>
             </tr>
             {% for log in logs %}
-                <tr class="{{ log.flagged ? 'flagged' : 'clean' }}">
+                <tr {{ log.flagged ? 'style="color: #c00;"' }}>
+                    <td>{{ loop.index }}</td>
                     <td>
-                        {{ log.dateCreated|date('Y/m/d') ~' '~ log.dateCreated|date('H:ia') }}</td>
+                        {{ log.dateCreated|date('Y/m/d') ~' '~ log.dateCreated|date('H:ia') }}
+                    </td>
                     <td>
-                        {{ log.email }}</td>
+                        {{ log.author }}
+                    </td>
                     <td>
-                        {{ log.author }}</td>
+                        {{ log.email }}
+                    </td>
                     <td class="typewriter">
-                        {{ log.content|nl2br }}</td>
+                        {{ log.content|nl2br }}
+                    </td>
                     <td>
                         <form method="POST">
                             {{ csrfInput() }}
-                            <input name="action" type="hidden" value="shield/deleteLog"/>
+                            <input name="action" type="hidden" value="shield/logs/delete-one"/>
                             <input type="hidden" name="id" value="{{ log.id }}"/>
                             <button class="btn icon delete" style="margin-top: -4px;" type="submit">Delete</button>
                         </form>
@@ -42,35 +48,20 @@
                 </tr>
             {% endfor %}
         </table>
-        <div class="shieldActionSet">
-            <div>
-                <form method="POST">
-                    {{ csrfInput() }}
-                    <input name="action" type="hidden" value="shield/deleteLogs"/>
-                    <input name="confirmation" type="hidden" value=""/>
-                    <button type="submit" class="btn submit icon">Delete Everything</button>
-                    <p>
-                        <input name="confirmation" type="checkbox" value="1"/>
-                        <span class="introvert">Yes, I want to delete everything!</span>
-                    </p>
-                </form>
-            </div>
-        </div>
-        {% else %}
-        <p>Nothing yet, you have a clean slate for now: )</p>
-    {% endif %}
 
-    <div class="shieldSection credits">
+        <div style="margin-top: 2rem;">
+            <form method="POST">
+                {{ csrfInput() }}
+                <input name="action" type="hidden" value="shield/logs/delete-all"/>
+                <input name="confirmation" type="hidden" value=""/>
+                <button type="submit" class="btn submit icon">Delete Everything</button>
+                <input name="confirmation" type="checkbox" value="1"/>
+                <span class="introvert">Yes, I want to delete everything!</span>
+            </form>
+        </div>
+    {% else %}
         <p>
-            &copy;
-            {{ "now" | date("Y") }}
-            <strong>
-                {{ name }}
-                <span class="shieldSubtle">({{ version }})</span>
-            </strong>
-            ❤️ Lovingly crafted by
-            <a href="{{- developerUrl -}}" title="@selvinortiz" target="_blank">
-                {{- developer -}}</a>
+            You&rsquo;ve got no spam submissions logged!
         </p>
-    </div>
+    {% endif %}
 {% endset %}

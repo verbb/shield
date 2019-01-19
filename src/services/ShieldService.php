@@ -248,10 +248,10 @@ class ShieldService extends Component
     public function detectDynamicFormSpam(Model $model)
     {
         $data = [
-            'type'    => Craft::$app->request->post('shield.typeFieldHandle', CommentType::ContactForm),
-            'email'   => Craft::$app->request->post('shield.emailFieldHandle'),
-            'author'  => Craft::$app->request->post('shield.authorFieldHandle'),
-            'content' => Craft::$app->request->post('shield.contentFieldHandle'),
+            'type'    => CommentType::ContactForm,
+            'email'   => Craft::$app->request->post('shield.emailHandle'),
+            'author'  => Craft::$app->request->post('shield.authorHandle'),
+            'content' => Craft::$app->request->post('shield.contentHandle'),
         ];
 
         $data = $this->renderObjectFields($data, $model);
@@ -262,25 +262,6 @@ class ShieldService extends Component
         }
 
         return false;
-    }
-
-    /**
-     * @param Model $comment
-     *
-     * @return bool
-     *
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function detectCommentsSpam(Model $comment)
-    {
-        $data = [
-            'type'    => CommentType::Comment,
-            'email'   => $comment->author->email,
-            'author'  => $comment->author->fullName,
-            'content' => $comment->comment,
-        ];
-
-        return $this->isSpam($data);
     }
 
     /**

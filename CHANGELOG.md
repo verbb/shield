@@ -5,6 +5,9 @@
 ### Changed
 - Now requires PHP `8.0.2+`.
 - Now requires Craft `4.0.0+`.
+- Renamed `verbb\shield\records\LogRecord` to `verbb\shield\records\Log`.
+- Renamed `verbb\shield\service\LogsService` to `verbb\shield\service\Logs`.
+- Renamed `verbb\shield\service\ShieldService` to `verbb\shield\service\Service`.
 
 ## 2.0.0 - 2022-07-26
 

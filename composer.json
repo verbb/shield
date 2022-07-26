@@ -1,44 +1,49 @@
 {
-    "name": "selvinortiz/shield",
-    "type": "craft-plugin",
-    "version": "1.0.4",
+    "name": "verbb/shield",
     "description": "Harness the power of Akismet to Shield your Craft CMS site from Spam",
+    "type": "craft-plugin",
+    "version": "2.0.0",
     "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
         "spam",
         "anti-spam",
         "akismet",
-        "craft",
-        "plugin",
         "shield"
     ],
+    "support": {
+        "email": "support@verbb.io",
+        "issues": "https://github.com/verbb/shield/issues?state=open",
+        "source": "https://github.com/verbb/shield",
+        "docs": "https://github.com/verbb/shield",
+        "rss": "https://github.com/verbb/shield/commits/v2.atom"
+    },
     "license": "MIT",
     "authors": [
+        {
+            "name": "Verbb",
+            "homepage": "https://verbb.io"
+        },
         {
             "name": "Selvin Ortiz",
             "email": "selvin@selvin.co"
         }
     ],
-    "support": {
-        "email": "selvin@selvin.co",
-        "issues": "https://github.com/selvinortiz/craft-plugin-shield/issues?state=open",
-        "source": "https://github.com/selvinortiz/craft-plugin-shield",
-        "docs": "https://selvinortiz.com/plugins/shield"
-    },
     "require": {
-        "craftcms/cms": "^3.0.0"
+        "craftcms/cms": "^3.7.0",
+        "verbb/base": "^1.0.2"
     },
     "autoload": {
         "psr-4": {
-            "selvinortiz\\shield\\": "src/"
+            "verbb\\shield\\": "src/"
         }
     },
     "extra": {
         "name": "Shield",
         "handle": "shield",
-        "class": "selvinortiz\\shield\\Shield",
-        "developer": "Selvin Ortiz",
-        "developerUrl": "https://selvinortiz.com",
-        "documentationUrl": "https://selvinortiz.com/plugins/shield",
-        "changelogUrl": "https://raw.githubusercontent.com/selvinortiz/craft-plugin-doxter/master/CHANGELOG.md"
+        "changelogUrl": "https://raw.githubusercontent.com/verbb/shield/craft-3/CHANGELOG.md",
+        "class": "verbb\\shield\\Shield"
     }
 }

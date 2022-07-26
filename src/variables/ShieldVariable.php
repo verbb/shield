@@ -1,27 +1,15 @@
 <?php
-namespace selvinortiz\shield\variables;
+namespace verbb\shield\variables;
 
-use function selvinortiz\shield\shield;
+use verbb\shield\Shield;
 
 class ShieldVariable
 {
-    public function version()
-    {
-        return shield()->version;
-    }
+    // Public Methods
+    // =========================================================================
 
-    public function settings()
+    public function getPluginName()
     {
-        return shield()->getSettings();
-    }
-
-    public function isKeyValid()
-    {
-        return shield()->service->isKeyValid();
-    }
-
-    public function logs()
-    {
-        return shield()->logs->all();
+        return Shield::$plugin->getPluginName();
     }
 }

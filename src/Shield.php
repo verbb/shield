@@ -1,164 +1,107 @@
 <?php
-namespace selvinortiz\shield;
+namespace verbb\shield;
 
-use yii\base\Event;
+use verbb\shield\base\PluginTrait;
+use verbb\shield\models\Settings;
+use verbb\shield\variables\ShieldVariable;
 
 use Craft;
 use craft\base\Plugin;
+use craft\events\RegisterUrlRulesEvent;
+use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
 
 use craft\contactform\Mailer;
 use craft\contactform\events\SendEvent;
+
 use craft\guestentries\controllers\SaveController;
 use craft\guestentries\events\SaveEvent;
 
 use barrelstrength\sproutforms\elements\Entry;
 use barrelstrength\sproutforms\events\OnBeforeSaveEntryEvent;
 
-use selvinortiz\shield\models\Settings;
-use selvinortiz\shield\services\LogsService;
-use selvinortiz\shield\services\ShieldService;
-use selvinortiz\shield\variables\ShieldVariable;
+use yii\base\Event;
 
-/**
- * Class Shield
- *
- * @package selvinortiz\shield
- *
- * @property LogsService   $logs
- * @property ShieldService $service
- */
 class Shield extends Plugin
 {
-    public $controllerNamespace = 'selvinortiz\shield\controllers';
+    // Properties
+    // =========================================================================
 
-    /**
-     * @var string
-     */
     public $schemaVersion = '1.0.0';
-
-    /**
-     * @todo Make configurable
-     *
-     * @var bool
-     */
     public $hasCpSection = true;
 
-    public function init()
+
+    // Traits
+    // =========================================================================
+
+    use PluginTrait;
+
+
+    // Public Methods
+    // =========================================================================
+
+    public function init(): void
     {
         parent::init();
 
-        $this->setComponents([
-            'logs'    => LogsService::class,
-            'service' => ShieldService::class,
-        ]);
+        self::$plugin = $this;
 
-        Event::on(
-            CraftVariable::class,
-            CraftVariable::EVENT_INIT,
-            [$this, 'registerTemplateComponent']
-        );
-
-        if ($this->shouldEnableContactFormSupport())
-        {
-            Event::on(
-                Mailer::class,
-                Mailer::EVENT_BEFORE_SEND,
-                function(SendEvent $event) {
-                    $event->isSpam = shield()->service->detectContactFormSpam($event->submission);
-                }
-            );
-        }
-
-        if ($this->shouldEnableGuestEntriesSupport())
-        {
-            Event::on(
-                SaveController::class,
-                SaveController::EVENT_BEFORE_SAVE_ENTRY,
-                function(SaveEvent $event) {
-                    $event->isSpam = shield()->service->detectDynamicFormSpam($event->entry);
-                }
-            );
-        }
+        $this->_setPluginComponents();
+        $this->_setLogging();
+        $this->_registerCpRoutes();
+        $this->_registerVariables();
+        $this->_registerCraftEventListeners();
     }
 
-    public function createSettingsModel()
+    public function getPluginName(): string
+    {
+        return Craft::t('shield', 'Shield');
+    }
+
+
+    // Protected Methods
+    // =========================================================================
+
+    protected function createSettingsModel(): Settings
     {
         return new Settings();
     }
 
-    /**
-     * @param string|array $message
-     */
-    public function info($message)
+
+    // Private Methods
+    // =========================================================================
+
+    private function _registerCpRoutes(): void
     {
-        Craft::info($message, 'shield');
+        Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function(RegisterUrlRulesEvent $event) {
+            $event->rules = array_merge($event->rules, [
+                'shield' => 'shield/logs',
+            ]);
+        });
     }
 
-    /**
-     * @param string|array $message
-     */
-    public function error($message)
+    private function _registerVariables(): void
     {
-        Craft::error($message, 'shield');
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
+            $event->sender->set('shield', ShieldVariable::class);
+        });
     }
 
-    /**
-     * @param Event $event
-     *
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function registerTemplateComponent(Event $event)
+    private function _registerCraftEventListeners(): void
     {
-        /**
-         * @var CraftVariable $variable
-         */
-        $variable = $event->sender;
+        $settings = $this->getSettings();
+        $pluginsService = Craft::$app->getPlugins();
 
-        $variable->set('shield', ShieldVariable::class);
-    }
-
-    /**
-     * @return bool
-     */
-    protected function shouldEnableContactFormSupport()
-    {
-        if (!$this->getSettings()->enableContactFormSupport)
-        {
-            return false;
+        if ($settings->enableContactFormSupport && $pluginsService->isPluginInstalled('contact-form')) {
+            Event::on(Mailer::class, Mailer::EVENT_BEFORE_SEND, function(SendEvent $event) {
+                $event->isSpam = $this->getService()->detectContactFormSpam($event->submission);
+            });
         }
 
-        if (!Craft::$app->plugins->isPluginInstalled('contact-form'))
-        {
-            return false;
+        if ($settings->enableGuestEntriesSupport && $pluginsService->isPluginInstalled('guest-entries')) {
+            Event::on(SaveController::class, SaveController::EVENT_BEFORE_SAVE_ENTRY, function(SaveEvent $event) {
+                $event->isSpam = $this->getService()->detectDynamicFormSpam($event->entry);
+            });
         }
-
-        return true;
     }
-
-    /**
-     * @return bool
-     */
-    protected function shouldEnableGuestEntriesSupport()
-    {
-        if (!$this->getSettings()->enableGuestEntriesSupport)
-        {
-            return false;
-        }
-
-        if (!Craft::$app->plugins->isPluginInstalled('guest-entries'))
-        {
-            return false;
-        }
-
-        return true;
-    }
-}
-
-/**
- * @return Shield
- */
-function shield()
-{
-    return Craft::$app->loadedModules[Shield::class] ?? null;
 }

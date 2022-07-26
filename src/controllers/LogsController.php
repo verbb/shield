@@ -1,50 +1,52 @@
 <?php
+namespace verbb\shield\controllers;
 
-namespace selvinortiz\shield\controllers;
+use verbb\shield\Shield;
 
 use Craft;
 use craft\web\Controller;
 
-use function selvinortiz\shield\shield;
-use selvinortiz\shield\records\LogRecord;
+use yii\web\Response;
 
 class LogsController extends Controller
 {
-    public function actionDeleteOne()
+    // Public Methods
+    // =========================================================================
+
+    public function actionIndex(): Response
     {
-        $this->requirePostRequest();
+        $logs = Shield::$plugin->getLogs()->getAllLogs();
 
-        $id = Craft::$app->request->post('id');
-
-        if (!$id || !($log = LogRecord::find()->where(['id' => $id])->one()))
-        {
-            return Craft::$app->session->setError('Could not find log to delete.');
-        }
-
-        if (!$log->delete())
-        {
-            return Craft::$app->session->setError('Could not delete log.');
-        }
-
-        return Craft::$app->session->setNotice('Deleted successfully.');
+        return $this->renderTemplate('shield/logs', [
+            'logs' => $logs,
+        ]);
     }
 
-    public function actionDeleteAll()
+    public function actionDelete(): void
     {
         $this->requirePostRequest();
 
-        $confirmation = Craft::$app->request->post('confirmation');
+        $id = Craft::$app->getRequest()->getParam('id');
 
-        if (!$confirmation)
-        {
-            return Craft::$app->session->setError('Confirm that you actually want to delete everything.');
+        if (!$id || !(Shield::$plugin->getLogs()->getLogById($id))) {
+            Craft::$app->getSession()->setError('Could not find log to delete.');
         }
 
-        if (!shield()->logs->delete())
-        {
-            return Craft::$app->session->setError('Could not delete any logs.');
+        if (!Shield::$plugin->getLogs()->deleteLogById($id)) {
+            Craft::$app->getSession()->setError('Could not delete log.');
         }
 
-        return Craft::$app->session->setNotice('Deleted logs successfully.');
+        Craft::$app->getSession()->setNotice('Deleted successfully.');
+    }
+
+    public function actionClear(): void
+    {
+        $this->requirePostRequest();
+
+        if (!Shield::$plugin->getLogs()->deleteAllLogs()) {
+            Craft::$app->getSession()->setError('Could not clear all logs.');
+        }
+
+        Craft::$app->getSession()->setNotice('Cleared logs successfully.');
     }
 }

@@ -1,0 +1,67 @@
+{% extends 'shield/_layouts' %}
+{% import '_includes/forms' as forms %}
+
+{% set crumbs = [
+    { label: 'Shield' | t('shield'), url: url('shield/settings') },
+    { label: 'Settings' | t('app'), url: url('shield/settings') }
+] %}
+
+{% set selectedTab = 'settings' %}
+
+{% block blockContent %}
+
+{% if logs | length > 0 %}
+    <table class="data fullwidth">
+        <tr>
+            <th>#</th>
+            <th>Date/Time</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Content</th>
+            <th class="thin"></th>
+        </tr>
+
+        {% for log in logs %}
+            <tr {{ log.flagged ? 'style="color: #c00;"' }}>
+                <td>{{ loop.index }}</td>
+
+                <td>
+                    {{ log.dateCreated | datetime('short') }}
+                </td>
+
+                <td>
+                    {{ log.author }}
+                </td>
+
+                <td>
+                    {{ log.email }}
+                </td>
+
+                <td class="typewriter">
+                    {{ log.content | nl2br }}
+                </td>
+
+                <td>
+                    <form method="POST">
+                        {{ csrfInput() }}
+                        <input name="action" type="hidden" value="shield/logs/delete">
+                        <input type="hidden" name="id" value="{{ log.id }}">
+                        <button class="btn small icon delete" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <hr>
+
+    <form method="POST">
+        {{ csrfInput() }}
+        <input name="action" type="hidden" value="shield/logs/clear">
+        <button type="submit" class="btn submit icon">Clear Logs</button>
+    </form>
+{% else %}
+    <p>You&rsquo;ve got no spam submissions logged!</p>
+{% endif %}
+
+{% endblock %}

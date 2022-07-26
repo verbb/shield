@@ -27,8 +27,8 @@ class Shield extends Plugin
     // Properties
     // =========================================================================
 
-    public $schemaVersion = '1.0.0';
-    public $hasCpSection = true;
+    public string $schemaVersion = '1.0.0';
+    public bool $hasCpSection = true;
 
 
     // Traits

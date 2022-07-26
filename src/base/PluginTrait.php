@@ -1,6 +1,7 @@
 <?php
 namespace verbb\shield\base;
 
+use verbb\shield\Shield;
 use verbb\shield\services\Logs;
 use verbb\shield\services\Service;
 
@@ -15,7 +16,7 @@ trait PluginTrait
     // Static Properties
     // =========================================================================
 
-    public static $plugin;
+    public static Shield $plugin;
 
 
     // Public Methods

@@ -8,7 +8,7 @@ class ShieldVariable
     // Public Methods
     // =========================================================================
 
-    public function getPluginName()
+    public function getPluginName(): string
     {
         return Shield::$plugin->getPluginName();
     }

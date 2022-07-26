@@ -17,7 +17,7 @@ class Logs extends Component
     // Properties
     // =========================================================================
 
-    private $_logs = null;
+    private ?MemoizableArray $_logs = null;
 
 
     // Public Methods

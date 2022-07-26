@@ -3,23 +3,25 @@ namespace verbb\shield\models;
 
 use craft\base\Model;
 
+use DateTime;
+
 class Log extends Model
 {
     // Public Properties
     // =========================================================================
 
-    public $id;
-    public $type;
-    public $email;
-    public $author;
-    public $content;
-    public $flagged = false;
-    public $ham = false;
-    public $spam = false;
-    public $data;
-    public $dateCreated;
-    public $dateUpdated;
-    public $uid;
+    public ?int $id = null;
+    public ?string $type = null;
+    public ?string $email = null;
+    public ?string $author = null;
+    public ?string $content = null;
+    public bool $flagged = false;
+    public bool $ham = false;
+    public bool $spam = false;
+    public ?string $data = null;
+    public ?DateTime $dateCreated = null;
+    public ?DateTime $dateUpdated = null;
+    public ?string $uid = null;
 
 
     // Public Methods

@@ -8,13 +8,13 @@ class Settings extends Model
     // Properties
     // =========================================================================
 
-    public $akismetApiKey = '';
-    public $akismetOriginUrl = '';
-    public $logSubmissions = false;
-    public $enableContactFormSupport = true;
-    public $enableGuestEntriesSupport = true;
-    public $enableSproutFormsSupport = false;
-    public $enableCommentsSupport = false;
+    public string $akismetApiKey = '';
+    public string $akismetOriginUrl = '';
+    public bool $logSubmissions = false;
+    public bool $enableContactFormSupport = true;
+    public bool $enableGuestEntriesSupport = true;
+    public bool $enableSproutFormsSupport = false;
+    public bool $enableCommentsSupport = false;
 
 
     // Public Methods

@@ -2,7 +2,7 @@
     "name": "verbb/shield",
     "description": "Harness the power of Akismet to Shield your Craft CMS site from Spam",
     "type": "craft-plugin",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "keywords": [
         "craft",
         "cms",
@@ -32,8 +32,9 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.7.0",
-        "verbb/base": "^1.0.2"
+        "php": "^8.0.2",
+        "craftcms/cms": "^4.0.0",
+        "verbb/base": "^2.0.0"
     },
     "autoload": {
         "psr-4": {
@@ -43,7 +44,7 @@
     "extra": {
         "name": "Shield",
         "handle": "shield",
-        "changelogUrl": "https://raw.githubusercontent.com/verbb/shield/craft-3/CHANGELOG.md",
+        "changelogUrl": "https://raw.githubusercontent.com/verbb/shield/craft-4/CHANGELOG.md",
         "class": "verbb\\shield\\Shield"
     }
 }

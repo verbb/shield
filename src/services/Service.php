@@ -23,24 +23,14 @@ class Service extends Component
     // Constants
     // =========================================================================
 
-    const ENDPOINT = 'rest.akismet.com/1.1';
+    public const ENDPOINT = 'rest.akismet.com/1.1';
 
 
     // Properties
     // =========================================================================
 
-    /**
-     * Default parameters
-     *
-     * @var array
-     */
-    protected $params;
-
-    /**
-     *
-     * @var Client
-     */
-    protected $httpClient;
+    protected array $params = [];
+    protected ?Client $httpClient = null;
 
 
     // Public Methods
@@ -151,7 +141,7 @@ class Service extends Component
             $log->content = $data['content'] ?? null;
             $log->flagged = $flaggedAsSpam;
 
-            Shield::$plugin->getLogs()->saveLod($log);
+            Shield::$plugin->getLogs()->saveLog($log);
         }
 
         return $flaggedAsSpam;
@@ -336,7 +326,7 @@ class Service extends Component
      * @throws Throwable
      * @throws Throwable
      */
-    protected function renderObjectFields(array $fields, $object): array
+    protected function renderObjectFields(array $fields, object $object): array
     {
         try {
             foreach ($fields as $field => $value) {

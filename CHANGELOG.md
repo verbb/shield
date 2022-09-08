@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.1 - 2022-09-08
+
+### Fixed
+- Fix an error when logging submissions due to typo.
+
 ## 3.0.0 - 2022-07-26
 
 ### Changed

@@ -151,7 +151,7 @@ class Service extends Component
             $log->content = $data['content'] ?? null;
             $log->flagged = $flaggedAsSpam;
 
-            Shield::$plugin->getLogs()->saveLod($log);
+            Shield::$plugin->getLogs()->saveLog($log);
         }
 
         return $flaggedAsSpam;

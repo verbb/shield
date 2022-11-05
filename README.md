@@ -1,5 +1,5 @@
 # Shield plugin for Craft CMS
-Use the power of [Akisment](https://akismet.com) to **Shield** your [Craft CMS](https://craftcms.com) website from annoying Spam. Protects the following:
+Use the power of [Akismet](https://akismet.com) to **Shield** your [Craft CMS](https://craftcms.com) website from annoying Spam. Protects the following:
 
 - [Contact Form](https://plugins.craftcms.com/contact-form) plugin
 - [Guest Entries](https://plugins.craftcms.com/guest-entries) plugin

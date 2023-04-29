@@ -1,6 +1,6 @@
 {
     "name": "verbb/shield",
-    "description": "Harness the power of Akismet to Shield your Craft CMS site from Spam",
+    "description": "Harness the power of Akismet to shield your site from spam.",
     "type": "craft-plugin",
     "version": "3.0.1",
     "keywords": [

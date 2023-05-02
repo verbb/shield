@@ -14,7 +14,7 @@ class Log extends Model
     public ?string $type = null;
     public ?string $email = null;
     public ?string $author = null;
-    public ?string $content = null;
+    public mixed $content = null;
     public bool $flagged = false;
     public bool $ham = false;
     public bool $spam = false;

@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.2 - 2023-05-27
+
+### Fixed
+- Fix `content` property when saving logs.
+
 ## 3.0.1 - 2022-09-08
 
 ### Fixed

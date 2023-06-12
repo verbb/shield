@@ -27,14 +27,14 @@ composer require verbb/shield && php craft plugin/install shield
 If you’re using [Contact Form](https://github.com/craftcms/contact-form) by [P&T](https://pixelandtonic.com/), Shield can help you protect your forms against annoying Spam
 
 - Follow the [Contact Form](https://github.com/craftcms/contact-form) setup guide, if you haven’t already.
-- Make sure Contact Form support is enabled in your [Shield Config](https://selvinortiz.com/plugins/shield/installation#configure)
+- Make sure Contact Form support is enabled in your [Shield Config](https://github.com/verbb/shield/blob/craft-4/src/config.php)
 - That is it, all future submissions will be monitored by Shield 🔥
 
 ## Guest Entries
 Shield can help you protect against Spam in your guest entries.
 
 1. Follow the [Guest Entries](https://github.com/craftcms/guest-entries) setup guide, if you haven’t already
-2. Make sure [Guest Entries](https://github.com/craftcms/guest-entries) support is enabled in your [Shield Config](https://selvinortiz.com/plugins/shield/installation#configure)
+2. Make sure [Guest Entries](https://github.com/craftcms/guest-entries) support is enabled in your [Shield Config](https://github.com/verbb/shield/blob/craft-4/src/config.php)
 3. Add the `hidden input` fields to your form so **Shield** knows what to validate
 
 ## Setup [#](#setup "Setup")

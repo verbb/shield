@@ -24,10 +24,10 @@ class Log extends Model
     public ?string $uid = null;
 
 
-    // Public Methods
+    // Protected Methods
     // =========================================================================
 
-    public function defineRules(): array
+    protected function defineRules(): array
     {
         $rules = parent::defineRules();
 

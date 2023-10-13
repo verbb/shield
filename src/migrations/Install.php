@@ -8,9 +8,6 @@ class Install extends Migration
     // Public Methods
     // =========================================================================
 
-    /**
-     * @inheritdoc
-     */
     public function safeUp(): bool
     {
         $this->createTable('{{%shield_logs}}', [
@@ -31,9 +28,6 @@ class Install extends Migration
         return true;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function safeDown(): bool
     {
         $this->dropTableIfExists('{{%shield_logs}}');

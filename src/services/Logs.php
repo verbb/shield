@@ -1,6 +1,7 @@
 <?php
 namespace verbb\shield\services;
 
+use verbb\shield\Shield;
 use verbb\shield\models\Log;
 use verbb\shield\records\Log as LogRecord;
 
@@ -38,7 +39,7 @@ class Logs extends Component
         $isNewLog = !$log->id;
 
         if ($runValidation && !$log->validate()) {
-            Craft::info('Log not saved due to validation error.', __METHOD__);
+            Shield::info('Log not saved due to validation error.');
             return false;
         }
 

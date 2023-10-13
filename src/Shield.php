@@ -46,11 +46,12 @@ class Shield extends Plugin
 
         self::$plugin = $this;
 
-        $this->_setPluginComponents();
-        $this->_setLogging();
-        $this->_registerCpRoutes();
         $this->_registerVariables();
-        $this->_registerCraftEventListeners();
+        $this->_registerEventHandlers();
+
+        if (Craft::$app->getRequest()->getIsCpRequest()) {
+            $this->_registerCpRoutes();
+        }
     }
 
     public function getPluginName(): string
@@ -87,7 +88,7 @@ class Shield extends Plugin
         });
     }
 
-    private function _registerCraftEventListeners(): void
+    private function _registerEventHandlers(): void
     {
         $settings = $this->getSettings();
         $pluginsService = Craft::$app->getPlugins();

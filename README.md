@@ -1,5 +1,5 @@
 # Shield plugin for Craft CMS
-<img width="500" src="https://verbb.imgix.net/plugins/shield/shield-social-card.png?v=1">
+<img width="500" src="https://verbb.imgix.net/plugins/shield/shield-social-card.png?v=2">
 
 Shield is a Craft CMS plugin that adds support for [Akismet](https://akismet.com) for forms.
 

@@ -11,6 +11,8 @@ use craft\events\RegisterUrlRulesEvent;
 use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
 
+use verbb\base\helpers\Plugin as PluginHelper;
+
 use craft\contactform\Mailer;
 use craft\contactform\events\SendEvent;
 
@@ -93,13 +95,13 @@ class Shield extends Plugin
         $settings = $this->getSettings();
         $pluginsService = Craft::$app->getPlugins();
 
-        if ($settings->enableContactFormSupport && $pluginsService->isPluginInstalled('contact-form')) {
+        if ($settings->enableContactFormSupport && PluginHelper::isPluginInstalledAndEnabled('contact-form')) {
             Event::on(Mailer::class, Mailer::EVENT_BEFORE_SEND, function(SendEvent $event) {
                 $event->isSpam = $this->getService()->detectContactFormSpam($event->submission);
             });
         }
 
-        if ($settings->enableGuestEntriesSupport && $pluginsService->isPluginInstalled('guest-entries')) {
+        if ($settings->enableGuestEntriesSupport && PluginHelper::isPluginInstalledAndEnabled('guest-entries')) {
             Event::on(SaveController::class, SaveController::EVENT_BEFORE_SAVE_ENTRY, function(SaveEvent $event) {
                 $event->isSpam = $this->getService()->detectDynamicFormSpam($event->entry);
             });

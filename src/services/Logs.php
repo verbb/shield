@@ -9,6 +9,7 @@ use Craft;
 use craft\base\Component;
 use craft\base\MemoizableArray;
 use craft\db\Query;
+use craft\helpers\Db;
 
 use Throwable;
 use Exception;
@@ -80,9 +81,7 @@ class Logs extends Component
         $transaction = $db->beginTransaction();
 
         try {
-            $db->createCommand()
-                ->delete('{{%shield_logs}}', ['id' => $log->id])
-                ->execute();
+            Db::delete('{{%shield_logs}}', ['id' => $log->id]);
 
             $transaction->commit();
         } catch (Throwable $e) {

@@ -32,6 +32,6 @@ class Install extends Migration
     {
         $this->dropTableIfExists('{{%shield_logs}}');
 
-        return false;
+        return true;
     }
 }

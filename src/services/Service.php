@@ -8,6 +8,7 @@ use verbb\shield\models\Log;
 use Craft;
 use craft\base\Model;
 use craft\base\Component;
+use craft\helpers\Json;
 
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
@@ -127,10 +128,10 @@ class Service extends Component
                 'flaggedAsSpam' => $flaggedAsSpam,
             ]);
 
-            Shield::error($message);
+            Shield::error(Json::encode($message));
         }
 
-        Shield::error($data);
+        Shield::error(Json::encode($data));
 
         // Should we save the log?
         if (Shield::$plugin->getSettings()->logSubmissions) {
@@ -333,7 +334,7 @@ class Service extends Component
                 $fields[$field] = Craft::$app->getView()->renderObjectTemplate($value, $object);
             }
         } catch (Exception $e) {
-            Shield::error($e);
+            Shield::error($e->getMessage());
 
             return [];
         }

@@ -11,6 +11,15 @@
 - Now requires PHP `8.2.0+`.
 - Now requires Craft `5.0.0+`.
 
+## 3.0.3 - 2024-10-09
+
+### Changed
+- Update English translations.
+
+### Fixed
+- Fix an error when logging spam.
+- Fix breadcrumb links.
+
 ## 3.0.2 - 2023-05-27
 
 ### Fixed

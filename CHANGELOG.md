@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.0.2 - 2024-10-09
+
+### Changed
+- Update English translations.
+
+### Fixed
+- Fix an error when logging spam.
+- Fix breadcrumb links.
+
 ## 4.0.1 - 2024-10-01
 
 ### Fixed

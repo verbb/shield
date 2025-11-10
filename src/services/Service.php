@@ -131,7 +131,7 @@ class Service extends Component
             Shield::error(Json::encode($message));
         }
 
-        Shield::error(Json::encode($data));
+        Shield::info(Json::encode($data));
 
         // Should we save the log?
         if (Shield::$plugin->getSettings()->logSubmissions) {

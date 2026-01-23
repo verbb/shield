@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.3 - 2026-01-23
+
+### Changed
+- Change error logging to info logging for data.
+
 ## 4.0.2 - 2024-10-09
 
 ### Changed

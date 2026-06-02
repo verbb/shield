@@ -13,6 +13,7 @@ class Settings extends Model
     public bool $logSubmissions = false;
     public bool $enableContactFormSupport = true;
     public bool $enableGuestEntriesSupport = true;
+    public bool $enableUserRegistrationSupport = true;
     public bool $enableSproutFormsSupport = false;
     public bool $enableCommentsSupport = false;
 

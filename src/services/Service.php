@@ -8,6 +8,7 @@ use verbb\shield\models\Log;
 use Craft;
 use craft\base\Model;
 use craft\base\Component;
+use craft\elements\User;
 use craft\helpers\Json;
 
 use yii\base\InvalidConfigException;
@@ -279,6 +280,18 @@ class Service extends Component
         }
 
         return false;
+    }
+
+    public function detectUserRegistrationSpam(User $user): bool
+    {
+        $data = [
+            'type' => CommentType::Signup,
+            'email' => $user->email,
+            'author' => $user->fullName ?: $user->username,
+            'content' => $user->username,
+        ];
+
+        return $this->isSpam($data);
     }
 
     /**

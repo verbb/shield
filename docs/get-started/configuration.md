@@ -13,6 +13,7 @@ return [
         'logSubmissions' => false,
         'enableContactFormSupport' => true,
         'enableGuestEntriesSupport' => true,
+        'enableUserRegistrationSupport' => true,
     ],
 ];
 ```
@@ -23,6 +24,7 @@ return [
 - `logSubmissions` - Whether to log submissions.
 - `enableContactFormSupport` - Whether to enable support for the [Contact Form](https://plugins.craftcms.com/contact-form) plugin.
 - `enableGuestEntriesSupport` - Whether to enable support for the [Guest Entries](https://plugins.craftcms.com/guest-entries) plugin.
+- `enableUserRegistrationSupport` - Whether to enable support for Craft public user registrations.
 
 ## Control Panel
 You can also manage configuration settings through the Control Panel by visiting Settings → Shield.

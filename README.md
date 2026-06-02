@@ -6,6 +6,7 @@ Shield is a Craft CMS plugin that adds support for [Akismet](https://akismet.com
 Supports:
 - [Contact Form](https://plugins.craftcms.com/contact-form) plugin
 - [Guest Entries](https://plugins.craftcms.com/guest-entries) plugin
+- Craft public user registrations
 
 ## Documentation
 Visit the [Shield Plugin page](https://verbb.io/craft-plugins/shield) for all documentation, guides, pricing and developer resources.

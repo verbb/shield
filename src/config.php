@@ -6,4 +6,5 @@ return [
     'logSubmissions' => false,
     'enableContactFormSupport' => true,
     'enableGuestEntriesSupport' => true,
+    'enableUserRegistrationSupport' => true,
 ];

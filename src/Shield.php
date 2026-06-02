@@ -7,7 +7,10 @@ use verbb\shield\variables\ShieldVariable;
 
 use Craft;
 use craft\base\Plugin;
+use craft\elements\User;
+use craft\events\ModelEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\web\Request;
 use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
 
@@ -106,5 +109,37 @@ class Shield extends Plugin
                 $event->isSpam = $this->getService()->detectDynamicFormSpam($event->entry);
             });
         }
+
+        if ($settings->enableUserRegistrationSupport) {
+            Event::on(User::class, User::EVENT_BEFORE_SAVE, function(ModelEvent $event) {
+                /** @var User $user */
+                $user = $event->sender;
+
+                if (!$event->isNew || !$this->_isPublicUserRegistration()) {
+                    return;
+                }
+
+                if ($this->getService()->detectUserRegistrationSpam($user)) {
+                    $user->addError('email', Craft::t('shield', 'Unable to register this account.'));
+
+                    $event->isValid = false;
+                }
+            });
+        }
+    }
+
+    private function _isPublicUserRegistration(): bool
+    {
+        $request = Craft::$app->getRequest();
+
+        if (!$request instanceof Request || !$request->getIsPost() || $request->getIsCpRequest()) {
+            return false;
+        }
+
+        if ($request->getBodyParam('userId')) {
+            return false;
+        }
+
+        return !Craft::$app->getUser()->getIdentity();
     }
 }

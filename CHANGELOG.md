@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.4 - 2026-06-05
+
+### Added
+- Add support for checking Craft public user registrations for spam.
+
 ## 4.0.3 - 2026-01-23
 
 ### Changed

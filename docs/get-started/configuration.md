@@ -1,30 +1,69 @@
 # Configuration
-Create a `shield.php` file under your `/config` directory with the following options available to you. You can also use multi-environment options to change these per environment.
 
-The below shows the defaults already used by Shield, so you don't need to add these options unless you want to modify the values.
+You can customise Shield’s settings using a PHP configuration file. This is optional: each setting has a default, so you only need to include the values you want to change.
+
+To override a setting, create `shield.php` in your Craft project’s `/config` directory and return an array of setting names and values. For example, the following will enable submission logging:
 
 ```php
 <?php
 
 return [
-    '*' => [
-        'akismetApiKey' => '',
-        'akismetOriginUrl' => '',
-        'logSubmissions' => false,
-        'enableContactFormSupport' => true,
-        'enableGuestEntriesSupport' => true,
-        'enableUserRegistrationSupport' => true,
-    ],
+    'logSubmissions' => true,
 ];
 ```
 
-## Configuration options
-- `akismetApiKey` - The API key for Akismet.
-- `akismetOriginUrl` - The origin URL for Akismet.
-- `logSubmissions` - Whether to log submissions.
-- `enableContactFormSupport` - Whether to enable support for the [Contact Form](https://plugins.craftcms.com/contact-form) plugin.
-- `enableGuestEntriesSupport` - Whether to enable support for the [Guest Entries](https://plugins.craftcms.com/guest-entries) plugin.
-- `enableUserRegistrationSupport` - Whether to enable support for Craft public user registrations.
+All other settings keep their defaults. Add any further settings you want to change to the same array. The options below explain the available settings and their defaults.
+
+## Configuration Options
+
+::: reference
+### `akismetApiKey`
+
+**Type:** `string` · **Default:** `''`
+
+The API key for Akismet.
+:::
+
+::: reference
+### `akismetOriginUrl`
+
+**Type:** `string` · **Default:** `''`
+
+The origin URL for Akismet.
+:::
+
+::: reference
+### `logSubmissions`
+
+**Type:** `bool` · **Default:** `false`
+
+Whether to log submissions.
+:::
+
+::: reference
+### `enableContactFormSupport`
+
+**Type:** `bool` · **Default:** `true`
+
+Whether to enable support for the [Contact Form](https://plugins.craftcms.com/contact-form) plugin.
+:::
+
+::: reference
+### `enableGuestEntriesSupport`
+
+**Type:** `bool` · **Default:** `true`
+
+Whether to enable support for the [Guest Entries](https://plugins.craftcms.com/guest-entries) plugin.
+:::
+
+::: reference
+### `enableUserRegistrationSupport`
+
+**Type:** `bool` · **Default:** `true`
+
+Whether to enable support for Craft public user registrations.
+:::
+
 
 ## Control Panel
 You can also manage configuration settings through the Control Panel by visiting Settings → Shield.

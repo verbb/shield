@@ -12,7 +12,7 @@ Supports:
 Visit the [Shield Plugin page](https://verbb.io/craft-plugins/shield) for all documentation, guides, pricing and developer resources.
 
 ## Credit & Thanks
-Originally created by [Selvin Ortiz](https://github.com/selvindev).
+Originally created by Selvin Ortiz.
 
 ## Support
 Get in touch with us via the [Shield Support page](https://verbb.io/craft-plugins/shield/support) or by [creating a Github issue](https://github.com/verbb/shield/issues)

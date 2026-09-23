@@ -7,6 +7,7 @@ use verbb\shield\services\Service;
 
 use verbb\base\LogTrait;
 use verbb\base\helpers\Plugin;
+use verbb\base\services\Templates;
 
 trait PluginTrait
 {
@@ -33,6 +34,10 @@ trait PluginTrait
             'components' => [
                 'logs' => Logs::class,
                 'service' => Service::class,
+                'templates' => [
+                    'class' => Templates::class,
+                    'pluginClass' => Shield::class,
+                ],
             ],
         ];
     }
@@ -49,6 +54,11 @@ trait PluginTrait
     public function getService(): Service
     {
         return $this->get('service');
+    }
+
+    public function getTemplates(): Templates
+    {
+        return $this->get('templates');
     }
 
 }

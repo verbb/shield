@@ -8,6 +8,7 @@ use verbb\shield\models\Log;
 use Craft;
 use craft\base\Model;
 use craft\base\Component;
+use craft\base\Element;
 use craft\elements\User;
 use craft\helpers\Json;
 
@@ -343,8 +344,10 @@ class Service extends Component
     protected function renderObjectFields(array $fields, object $object): array
     {
         try {
+            $fieldValues = $this->_getTokenFieldValues($object);
+
             foreach ($fields as $field => $value) {
-                $fields[$field] = Craft::$app->getView()->renderObjectTemplate($value, $object);
+                $fields[$field] = Shield::$plugin->getTemplates()->renderTokens((string)$value, $fieldValues);
             }
         } catch (Exception $e) {
             Shield::error($e->getMessage());
@@ -353,5 +356,37 @@ class Service extends Component
         }
 
         return $fields;
+    }
+
+
+    // Private Methods
+    // =========================================================================
+
+    private function _getTokenFieldValues(object $object): array
+    {
+        // Element metadata and service getters are not submitted form fields.
+        if ($object instanceof Element) {
+            $names = ['title'];
+
+            foreach ($object->getFieldLayout()?->getCustomFields() ?? [] as $field) {
+                $names[] = $field->handle;
+            }
+        } else if ($object instanceof Model) {
+            $names = $object->safeAttributes();
+        } else {
+            return [];
+        }
+
+        $values = [];
+
+        foreach ($names as $name) {
+            $value = $object->$name;
+
+            if (is_scalar($value) || $value === null) {
+                $values[$name] = $value;
+            }
+        }
+
+        return $values;
     }
 }

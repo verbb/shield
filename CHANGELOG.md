@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Resolve spam-check field tokens from submitted data without evaluating Twig.
+
 ## 4.0.5 - 2026-09-14
 
 ### Changed

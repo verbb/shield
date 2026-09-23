@@ -10,6 +10,7 @@ use Craft;
 use yii\log\Logger;
 
 use verbb\base\BaseHelper;
+use verbb\base\services\Templates;
 
 trait PluginTrait
 {
@@ -49,6 +50,11 @@ trait PluginTrait
         return $this->get('logs');
     }
 
+    public function getTemplates(): Templates
+    {
+        return $this->get('templates');
+    }
+
     public function getService(): Service
     {
         return $this->get('service');
@@ -63,6 +69,10 @@ trait PluginTrait
         $this->setComponents([
             'logs' => Logs::class,
             'service' => Service::class,
+            'templates' => [
+                'class' => Templates::class,
+                'pluginClass' => Shield::class,
+            ],
         ]);
 
         BaseHelper::registerModule();

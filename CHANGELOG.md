@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Require `verbb/base` 2.0.15 or later within 2.x.
+- Dynamic form mappings now support `{fieldHandle}` tokens from scalar form fields. Twig expressions and non-form properties are no longer supported in these mappings.
+
+### Fixed
+- Fix a template injection vulnerability.
+
 ## 3.0.3 - 2024-10-09
 
 ### Changed

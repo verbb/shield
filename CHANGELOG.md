@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed a moderate-severity external service transport vulnerability.
+
 ## 4.0.6 - 2026-09-23
 
 ### Changed

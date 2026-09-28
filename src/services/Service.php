@@ -98,7 +98,7 @@ class Service extends Component
     public function isKeyValid(): bool
     {
         $params = [
-            'key' => $this->getApiKey(),
+            'api_key' => $this->getApiKey(),
             'blog' => $this->getOriginUrl(),
         ];
 
@@ -162,6 +162,7 @@ class Service extends Component
     public function detectSpam(array $data = []): bool
     {
         $params = array_merge($this->params, [
+            'api_key' => $this->getApiKey(),
             'comment_type' => $data['type'] ?? $this->params['comment_type'] ?? null,
             'comment_author' => $data['author'] ?? null,
             'comment_content' => $data['content'] ?? null,
@@ -190,6 +191,7 @@ class Service extends Component
     public function submitSpam(array $data = []): bool
     {
         $params = array_merge($this->params, [
+            'api_key' => $this->getApiKey(),
             'comment_author' => $data['author'] ?? null,
             'comment_content' => $data['content'] ?? null,
             'comment_author_email' => $data['email'] ?? null,
@@ -217,6 +219,7 @@ class Service extends Component
     public function submitHam(array $data = []): bool
     {
         $params = array_merge($this->params, [
+            'api_key' => $this->getApiKey(),
             'comment_author' => $data['author'] ?? null,
             'comment_content' => $data['content'] ?? null,
             'comment_author_email' => $data['email'] ?? null,
@@ -315,22 +318,22 @@ class Service extends Component
 
     protected function getKeyEndpoint(): string
     {
-        return sprintf('http://%s/verify-key', self::ENDPOINT);
+        return sprintf('https://%s/verify-key', self::ENDPOINT);
     }
 
     protected function getContentEndpoint(): string
     {
-        return sprintf('http://%s.%s/comment-check', $this->getApiKey(), self::ENDPOINT);
+        return sprintf('https://%s/comment-check', self::ENDPOINT);
     }
 
     protected function getSpamEndpoint(): string
     {
-        return sprintf('http://%s.%s/submit-spam', $this->getApiKey(), self::ENDPOINT);
+        return sprintf('https://%s/submit-spam', self::ENDPOINT);
     }
 
     protected function getHamEndpoint(): string
     {
-        return sprintf('http://%s.%s/submit-ham', $this->getApiKey(), self::ENDPOINT);
+        return sprintf('https://%s/submit-ham', self::ENDPOINT);
     }
 
     /**

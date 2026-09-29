@@ -4,10 +4,9 @@ Send the relevant submission details to Akismet and use its result when processi
 
 ## Features
 
-- **Akismet checks:** Assess public submissions with Akismet’s spam-detection service.
-- **Contact Form:** Protect messages submitted through Craft’s Contact Form plugin.
-- **Guest Entries:** Check public entry submissions before accepting unwanted content.
-- **User registration:** Apply spam screening to Craft’s public account signup flow.
-- **Selective enablement:** Turn protection on only for the submission paths the site uses.
-- **Developer context:** Provide useful author, content, and request details to the check.
-- **Configurable spam protection:** Configure the Akismet connection and decide which supported submission paths should be checked. Developers can supply the content and request context that makes the decision more useful.
+- Assess public submissions with Akismet's spam-detection service.
+- Protect messages submitted through Craft's Contact Form plugin.
+- Check public entry submissions before accepting unwanted content.
+- Apply spam screening to Craft's public account signup flow.
+- Turn protection on only for the submission paths the site uses.
+- Provide useful author, content, and request details to the check.

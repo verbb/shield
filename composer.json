@@ -2,7 +2,7 @@
     "name": "verbb/shield",
     "description": "A Craft CMS plugin that uses Akismet to screen public submissions and registrations for spam.",
     "type": "craft-plugin",
-    "version": "4.0.6",
+    "version": "4.0.7",
     "keywords": [
         "craft",
         "cms",

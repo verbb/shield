@@ -374,7 +374,7 @@ class Service extends Component
             foreach ($object->getFieldLayout()?->getCustomFields() ?? [] as $field) {
                 $names[] = $field->handle;
             }
-        } else if ($object instanceof Model) {
+        } elseif ($object instanceof Model) {
             $names = $object->safeAttributes();
         } else {
             return [];

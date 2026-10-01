@@ -28,6 +28,9 @@ class Service extends Component
 
     public const ENDPOINT = 'rest.akismet.com/1.1';
 
+    private const CONNECT_TIMEOUT = 3;
+    private const REQUEST_TIMEOUT = 5;
+
 
     // Properties
     // =========================================================================
@@ -48,10 +51,15 @@ class Service extends Component
 
         $this->params = [
             'blog' => $this->getOriginUrl(),
-            'user_ip' => $this->getRequestingIp(),
             'user_agent' => $this->getUserAgent(),
             'comment_type' => CommentType::ContactForm,
         ];
+
+        $userIp = $this->getRequestingIp();
+
+        if ($userIp !== null) {
+            $this->params['user_ip'] = $userIp;
+        }
 
         $this->httpClient = Craft::createGuzzleClient();
     }
@@ -102,7 +110,7 @@ class Service extends Component
             'blog' => $this->getOriginUrl(),
         ];
 
-        $response = $this->httpClient->post($this->getKeyEndpoint(), ['form_params' => $params]);
+        $response = $this->httpClient->post($this->getKeyEndpoint(), $this->_requestOptions($params));
         $response = (string)$response->getBody();
 
         return $response == 'valid';
@@ -118,15 +126,15 @@ class Service extends Component
      */
     public function isSpam(array $data = []): bool
     {
-        $isKeyValid = true;
         $flaggedAsSpam = false;
 
         try {
             $flaggedAsSpam = $this->detectSpam($data);
+        } catch (GuzzleException) {
+            Shield::warning('Unable to check this submission with Akismet. The submission was allowed.');
         } catch (UserException $e) {
             $message = array_merge($data, [
                 'error' => $e,
-                'isKeyValid' => $isKeyValid,
                 'flaggedAsSpam' => $flaggedAsSpam,
             ]);
 
@@ -169,14 +177,20 @@ class Service extends Component
             'comment_author_email' => $data['email'] ?? null,
         ]);
 
-        if ($this->isKeyValid()) {
-            $response = $this->httpClient->post($this->getContentEndpoint(), ['form_params' => $params]);
-            $response = (string)$response->getBody();
+        $response = $this->httpClient->post($this->getContentEndpoint(), $this->_requestOptions($params));
+        $body = trim((string)$response->getBody());
 
-            return 'true' == $response;
+        if ($body === 'true') {
+            return true;
         }
 
-        throw new UserException('Your akismet api key is invalid.');
+        if ($body === 'false') {
+            return false;
+        }
+
+        $message = $response->getHeaderLine('X-akismet-debug-help') ?: 'Akismet returned an invalid response.';
+
+        throw new UserException($message);
     }
 
     /**
@@ -198,7 +212,7 @@ class Service extends Component
         ]);
 
         if ($this->isKeyValid()) {
-            $response = $this->httpClient->post($this->getSpamEndpoint(), ['form_params' => $params]);
+            $response = $this->httpClient->post($this->getSpamEndpoint(), $this->_requestOptions($params));
             $response = (string)$response->getBody();
 
             return 'Thanks for making the web a better place.' == $response;
@@ -226,7 +240,7 @@ class Service extends Component
         ]);
 
         if ($this->isKeyValid()) {
-            $response = $this->httpClient->post($this->getHamEndpoint(), ['form_params' => $params]);
+            $response = $this->httpClient->post($this->getHamEndpoint(), $this->_requestOptions($params));
             $response = (string)$response->getBody();
 
             return 'Thanks for making the web a better place.' == $response;
@@ -298,14 +312,17 @@ class Service extends Component
         return $this->isSpam($data);
     }
 
-    /**
-     * Ensures that we get the right IP address even if behind CloudFlare
-     *
-     * @return string
-     */
-    public function getRequestingIp(): string
+    public function getRequestingIp(): ?string
     {
-        return !empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? $_SERVER['HTTP_CF_CONNECTING_IP'] : Craft::$app->getRequest()->getUserIP();
+        $request = Craft::$app->getRequest();
+        $trustedHosts = $request->trustedHosts;
+
+        // Craft trusts forwarded IP headers by default, so only use them after the site restricts trusted proxies.
+        if (in_array('any', $trustedHosts, true) || array_key_exists('any', $trustedHosts)) {
+            return $request->getRemoteIP();
+        }
+
+        return $request->getUserIP();
     }
 
     protected function getUserAgent(): string
@@ -364,6 +381,16 @@ class Service extends Component
 
     // Private Methods
     // =========================================================================
+
+    private function _requestOptions(array $params): array
+    {
+        // Apply the bounds per request so an injected HTTP client cannot remove them.
+        return [
+            'connect_timeout' => self::CONNECT_TIMEOUT,
+            'timeout' => self::REQUEST_TIMEOUT,
+            'form_params' => $params,
+        ];
+    }
 
     private function _getTokenFieldValues(object $object): array
     {

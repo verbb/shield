@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Fixed
+- Improved Akismet request reliability when the service is slow or unavailable.
+- Fixed a low-severity IP spoofing vulnerability.
 - Fixed a low-severity authorization vulnerability.
 
 ## 4.0.7 - 2026-09-30

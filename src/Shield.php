@@ -9,7 +9,9 @@ use Craft;
 use craft\base\Plugin;
 use craft\elements\User;
 use craft\events\ModelEvent;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\services\UserPermissions;
 use craft\web\Request;
 use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
@@ -29,17 +31,23 @@ use yii\base\Event;
 
 class Shield extends Plugin
 {
-    // Properties
+    // Constants
     // =========================================================================
 
-    public string $schemaVersion = '1.0.0';
-    public bool $hasCpSection = true;
+    public const PERMISSION_MANAGE_LOGS = 'shield-manageLogs';
 
 
     // Traits
     // =========================================================================
 
     use PluginTrait;
+
+
+    // Properties
+    // =========================================================================
+
+    public string $schemaVersion = '1.0.0';
+    public bool $hasCpSection = true;
 
 
     // Public Methods
@@ -53,6 +61,7 @@ class Shield extends Plugin
 
         $this->_registerVariables();
         $this->_registerEventHandlers();
+        $this->_registerPermissions();
 
         if (Craft::$app->getRequest()->getIsCpRequest()) {
             $this->_registerCpRoutes();
@@ -90,6 +99,20 @@ class Shield extends Plugin
     {
         Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, function(Event $event) {
             $event->sender->set('shield', ShieldVariable::class);
+        });
+    }
+
+    private function _registerPermissions(): void
+    {
+        Event::on(UserPermissions::class, UserPermissions::EVENT_REGISTER_PERMISSIONS, function(RegisterUserPermissionsEvent $event) {
+            $event->permissions[] = [
+                'heading' => Craft::t('shield', 'Shield'),
+                'permissions' => [
+                    self::PERMISSION_MANAGE_LOGS => [
+                        'label' => Craft::t('shield', 'Manage submission logs'),
+                    ],
+                ],
+            ];
         });
     }
 

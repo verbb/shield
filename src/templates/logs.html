@@ -15,7 +15,9 @@
             <th>Name</th>
             <th>Email</th>
             <th>Content</th>
-            <th class="thin"></th>
+            {% if canManageLogs %}
+                <th class="thin"></th>
+            {% endif %}
         </tr>
 
         {% for log in logs %}
@@ -38,25 +40,29 @@
                     {{ log.content | nl2br }}
                 </td>
 
-                <td>
-                    <form method="POST">
-                        {{ csrfInput() }}
-                        <input name="action" type="hidden" value="shield/logs/delete">
-                        <input type="hidden" name="id" value="{{ log.id }}">
-                        <button class="btn small icon delete" type="submit">Delete</button>
-                    </form>
-                </td>
+                {% if canManageLogs %}
+                    <td>
+                        <form method="POST">
+                            {{ csrfInput() }}
+                            <input name="action" type="hidden" value="shield/logs/delete">
+                            <input type="hidden" name="id" value="{{ log.id }}">
+                            <button class="btn small icon delete" type="submit">Delete</button>
+                        </form>
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
 
-    <hr>
+    {% if canManageLogs %}
+        <hr>
 
-    <form method="POST">
-        {{ csrfInput() }}
-        <input name="action" type="hidden" value="shield/logs/clear">
-        <button type="submit" class="btn submit icon">Clear Logs</button>
-    </form>
+        <form method="POST">
+            {{ csrfInput() }}
+            <input name="action" type="hidden" value="shield/logs/clear">
+            <button type="submit" class="btn submit icon">Clear Logs</button>
+        </form>
+    {% endif %}
 {% else %}
     <p>You&rsquo;ve got no spam submissions logged!</p>
 {% endif %}

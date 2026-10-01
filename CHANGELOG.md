@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed a low-severity authorization vulnerability.
+
 ## 4.0.7 - 2026-09-30
 
 ### Fixed

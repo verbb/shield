@@ -1,6 +1,6 @@
 {% extends parentLayout ?? '_layouts/cp' %}
 
-{% do view.registerAssetBundle('verbb\\shield\\assetbundles\\ShieldAsset') %}
+{% do view.registerAssetBundle('verbb\\shield\\web\\assets\\cp\\ShieldAsset') %}
 
 {% if title is not defined %}
     {% set title = craft.shield.getPluginName() | t('shield') %}

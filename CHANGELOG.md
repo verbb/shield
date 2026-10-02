@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Changed
+- Updated the required version of `verbb/base` to 3.0.19.
+
 ### Fixed
 - Improved Akismet request reliability when the service is slow or unavailable.
 - Fixed a low-severity IP spoofing vulnerability.

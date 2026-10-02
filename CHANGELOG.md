@@ -4,6 +4,7 @@
 
 ### Fixed
 - Fixed a low-severity sensitive data logging vulnerability.
+- Fixed a low-severity business logic bypass vulnerability.
 
 ## 4.0.8 - 2026-10-02
 

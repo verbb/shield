@@ -159,10 +159,6 @@ class Shield extends Plugin
             return false;
         }
 
-        if ($request->getBodyParam('userId')) {
-            return false;
-        }
-
         return !Craft::$app->getUser()->getIdentity();
     }
 }

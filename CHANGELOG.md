@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed a low-severity sensitive data logging vulnerability.
+
 ## 4.0.8 - 2026-10-02
 
 ### Changed

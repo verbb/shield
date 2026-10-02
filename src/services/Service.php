@@ -10,7 +10,6 @@ use craft\base\Model;
 use craft\base\Component;
 use craft\base\Element;
 use craft\elements\User;
-use craft\helpers\Json;
 
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
@@ -132,16 +131,9 @@ class Service extends Component
             $flaggedAsSpam = $this->detectSpam($data);
         } catch (GuzzleException) {
             Shield::warning('Unable to check this submission with Akismet. The submission was allowed.');
-        } catch (UserException $e) {
-            $message = array_merge($data, [
-                'error' => $e,
-                'flaggedAsSpam' => $flaggedAsSpam,
-            ]);
-
-            Shield::error(Json::encode($message));
+        } catch (UserException) {
+            Shield::error('Akismet returned an invalid response.');
         }
-
-        Shield::info(Json::encode($data));
 
         // Should we save the log?
         if (Shield::$plugin->getSettings()->logSubmissions) {

@@ -319,7 +319,7 @@ class Service extends Component
 
     protected function getUserAgent(): string
     {
-        $craftInfo = 'Craft ' . Craft::$app->getEditionName() . ' ' . Craft::$app->getVersion();
+        $craftInfo = 'Craft ' . Craft::$app->edition->name . ' ' . Craft::$app->getVersion();
         $pluginInfo = 'Shield ' . Shield::$plugin->getVersion();
 
         return Craft::$app->getRequest()->getUserAgent() ?? ($craftInfo . ' | ' . $pluginInfo);

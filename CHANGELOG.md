@@ -4,6 +4,7 @@
 
 ### Fixed
 - Fixed deleting a log that could not be found showing a success message, or throwing an error when no log ID was provided.
+- Fixed a success message showing when deleting a log or clearing all logs failed.
 
 ## 4.0.10 - 2026-10-15
 

@@ -50,6 +50,8 @@ class LogsController extends Controller
 
         if (!Shield::$plugin->getLogs()->deleteLogById($id)) {
             Craft::$app->getSession()->setError('Could not delete log.');
+
+            return;
         }
 
         Craft::$app->getSession()->setNotice('Deleted successfully.');
@@ -62,6 +64,8 @@ class LogsController extends Controller
 
         if (!Shield::$plugin->getLogs()->deleteAllLogs()) {
             Craft::$app->getSession()->setError('Could not clear all logs.');
+
+            return;
         }
 
         Craft::$app->getSession()->setNotice('Cleared logs successfully.');

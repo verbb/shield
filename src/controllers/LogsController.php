@@ -44,6 +44,8 @@ class LogsController extends Controller
 
         if (!$id || !(Shield::$plugin->getLogs()->getLogById($id))) {
             Craft::$app->getSession()->setError('Could not find log to delete.');
+
+            return;
         }
 
         if (!Shield::$plugin->getLogs()->deleteLogById($id)) {

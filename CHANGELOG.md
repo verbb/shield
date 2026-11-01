@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 4.0.11 - 2026-11-01
 
 ### Fixed
 - Fixed deleting a log that could not be found showing a success message, or throwing an error when no log ID was provided.

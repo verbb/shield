@@ -10,6 +10,7 @@ use craft\base\Model;
 use craft\base\Component;
 use craft\base\Element;
 use craft\elements\User;
+use craft\helpers\UrlHelper;
 
 use yii\base\InvalidConfigException;
 use yii\base\UserException;
@@ -90,7 +91,7 @@ class Service extends Component
         $originUrl = trim($originUrl);
 
         if (empty($originUrl) || '{siteUrl}' === $originUrl) {
-            return Craft::$app->getRequest()->getUrl();
+            return UrlHelper::baseSiteUrl();
         }
 
         return $originUrl;

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+- Fixed the Akismet `blog` value being sent as the relative request URL, instead of the site URL.
+
 ## 4.0.11 - 2026-11-01
 
 ### Fixed

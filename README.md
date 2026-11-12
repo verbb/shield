@@ -15,16 +15,20 @@ Send the relevant submission details to Akismet and use its result when processi
 - Provide useful author, content, and request details to the check.
 
 ## Documentation
+
 Visit the [Shield Plugin page](https://verbb.io/craft-plugins/shield) for all documentation, guides, pricing and developer resources.
 
 ## Credit & Thanks
+
 Originally created by Selvin Ortiz.
 
 ## Support
-Get in touch with us via the [Shield Support page](https://verbb.io/craft-plugins/shield/support) or by [creating a Github issue](https://github.com/verbb/shield/issues)
+
+Get in touch with us via the [Shield Support page](https://verbb.io/craft-plugins/shield/support) or by [creating a GitHub issue](https://github.com/verbb/shield/issues).
 
 ## Sponsor
-Shield is licensed under the MIT license, meaning it will always be free and open source - we love free stuff! If you'd like to show your support to the plugin regardless, [Sponsor](https://github.com/sponsors/verbb) development.
+
+Shield is licensed under the MIT license, so it will always be free and open source. If you'd like to support it anyway, you can [sponsor its development](https://github.com/sponsors/verbb).
 
 <h2></h2>
 

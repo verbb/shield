@@ -14,7 +14,8 @@
         "children": [
             "feature-tour/contact-form",
             "feature-tour/guest-entries",
-            "feature-tour/user-registrations"
+            "feature-tour/user-registrations",
+            "feature-tour/permissions"
         ]
     }
 ]

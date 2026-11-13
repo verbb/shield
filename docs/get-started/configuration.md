@@ -63,7 +63,3 @@ Whether to enable support for the [Guest Entries](https://plugins.craftcms.com/g
 
 Whether to enable support for Craft public user registrations.
 :::
-
-
-## Control Panel
-You can also manage configuration settings through the Control Panel by visiting Settings → Shield.

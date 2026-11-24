@@ -1,0 +1,42 @@
+/* The Logs page with nothing to show yet: Plugin Kit's page empty state, straight on the page background. */
+.shield-bare-content #content.content-pane {
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.shield-bare-content #content > pk-state-panel[layout='page'] {
+    flex: 1 1 auto;
+}
+
+/* Shield's spot illustration in the Logs page's empty states. A duotone in Shield's brand colour (#66b7bb, from
+   icon.svg), with a darker line on white, a soft tinted fill and the keyhole in the brand colour itself. */
+.shield-spot {
+    --shield-spot-line: #3d8a8e;
+    --shield-spot-tint: #e3f3f4;
+    --shield-spot-accent: #66b7bb;
+    overflow: visible;
+}
+
+.shield-spot :is(.shield-spot__paper, .shield-spot__fill, .shield-spot__line) {
+    stroke: var(--shield-spot-line);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.shield-spot .shield-spot__paper {
+    fill: var(--white, #fff);
+}
+
+.shield-spot .shield-spot__fill {
+    fill: var(--shield-spot-tint);
+}
+
+.shield-spot .shield-spot__line {
+    fill: none;
+}
+
+.shield-spot .shield-spot__accent {
+    fill: var(--shield-spot-accent);
+}

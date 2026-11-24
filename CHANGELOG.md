@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Shield’s control panel assets are now built with Vite.
+
 ## 4.0.12 - 2026-11-05
 
 ### Fixed

@@ -13,6 +13,8 @@ class ShieldAsset extends AssetBundle
 
     public function init(): void
     {
+        $this->sourcePath = __DIR__ . '/dist/';
+
         $this->depends = [
             VerbbCpAsset::class,
             CpAsset::class,

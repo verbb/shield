@@ -1,0 +1,19 @@
+{
+    "name": "shield",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite --port 4046",
+        "build": "vite build",
+        "watch": "vite build --watch",
+        "typecheck": "tsc --noEmit -p tsconfig.json"
+    },
+    "devDependencies": {
+        "typescript": "^6.0.3",
+        "vite": "^8.3.5"
+    },
+    "dependencies": {
+        "@verbb/plugin-kit-web": "file:../../../plugin-kit/plugin-kit/plugin-kit-web"
+    }
+}

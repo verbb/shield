@@ -1,0 +1,24 @@
+{
+  "../../../../../../plugin-kit/plugin-kit/plugin-kit-web/dist/components/state-panel/pk-state-panel.js": {
+    "file": "assets/pk-state-panel-C-nAVds1.js",
+    "name": "pk-state-panel",
+    "src": "../../../../../../plugin-kit/plugin-kit/plugin-kit-web/dist/components/state-panel/pk-state-panel.js",
+    "isDynamicEntry": true
+  },
+  "../../../../../../plugin-kit/plugin-kit/plugin-kit-web/dist/plugin-kit.css": {
+    "file": "assets/plugin-kit-CkJ7A1HB.css",
+    "src": "../../../../../../plugin-kit/plugin-kit/plugin-kit-web/dist/plugin-kit.css"
+  },
+  "cp/src/js/shield.ts": {
+    "file": "assets/shield-07iwaH8v.js",
+    "name": "shield",
+    "src": "cp/src/js/shield.ts",
+    "isEntry": true,
+    "dynamicImports": [
+      "../../../../../../plugin-kit/plugin-kit/plugin-kit-web/dist/components/state-panel/pk-state-panel.js"
+    ],
+    "css": [
+      "assets/shield-Gj6wKBTa.css"
+    ]
+  }
+}

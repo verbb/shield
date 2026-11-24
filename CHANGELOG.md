@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 4.1.0 - 2026-11-24
 
 ### Changed
 - The Logs page now explains what to do when no Akismet API key is set or submission logging is turned off, instead of showing an empty log.

@@ -5,6 +5,8 @@
     { label: 'Shield' | t('shield'), url: url('shield') },
 ] %}
 
+{% set bareContent = logs is empty %}
+
 {% block blockContent %}
 
 {% if logs | length > 0 %}
@@ -64,7 +66,29 @@
         </form>
     {% endif %}
 {% else %}
-    <p>You&rsquo;ve got no spam submissions logged!</p>
+    {% set docsUrl = 'https://verbb.io/craft-plugins/shield/docs' %}
+    {% set configFile = '<code>config/shield.php</code>' %}
+
+    {# Logging is off by default and the Akismet key is config-only, so say which one is missing before calling the log empty. #}
+    {% if not hasApiKey %}
+        <pk-state-panel layout="page" heading="{{ 'Add your Akismet API key' | t('shield') }}" heading-level="2">
+            {% include 'shield/_includes/spots/logs' %}
+            {{ 'Shield checks submissions with Akismet, so it can’t catch spam until {setting} is set in {file}.' | t('shield', { setting: '<code>akismetApiKey</code>', file: configFile }) | raw }}
+            <a slot="actions" class="btn" href="{{ docsUrl }}/get-started/configuration" target="_blank" rel="noopener">{{ 'View configuration docs' | t('shield') }}</a>
+        </pk-state-panel>
+    {% elseif not loggingEnabled %}
+        <pk-state-panel layout="page" heading="{{ 'Turn on submission logging' | t('shield') }}" heading-level="2">
+            {% include 'shield/_includes/spots/logs' %}
+            {{ 'Shield is checking submissions for spam, and lists them here once {setting} is turned on in {file}.' | t('shield', { setting: '<code>logSubmissions</code>', file: configFile }) | raw }}
+            <a slot="actions" class="btn" href="{{ docsUrl }}/get-started/configuration" target="_blank" rel="noopener">{{ 'View configuration docs' | t('shield') }}</a>
+        </pk-state-panel>
+    {% else %}
+        <pk-state-panel layout="page" heading="{{ 'No submissions logged yet' | t('shield') }}" heading-level="2">
+            {% include 'shield/_includes/spots/logs' %}
+            {{ 'Each submission Shield checks will be listed here, with spam shown in red.' | t('shield') }}
+            <a slot="actions" class="btn" href="{{ docsUrl }}" target="_blank" rel="noopener">{{ 'View docs' | t('shield') }}</a>
+        </pk-state-panel>
+    {% endif %}
 {% endif %}
 
 {% endblock %}

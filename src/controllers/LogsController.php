@@ -31,6 +31,8 @@ class LogsController extends Controller
 
         return $this->renderTemplate('shield/logs', [
             'logs' => $logs,
+            'hasApiKey' => trim(Shield::$plugin->getService()->getApiKey()) !== '',
+            'loggingEnabled' => Shield::$plugin->getSettings()->logSubmissions,
             'canManageLogs' => Craft::$app->getUser()->checkPermission(Shield::PERMISSION_MANAGE_LOGS),
         ]);
     }
